@@ -1,10 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
+import { Headset, ArrowRight, MapPin, X, Send, Mic, Sparkles, Plane } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Sparkles, ArrowRight, MapPin, X, Send, Mic } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import MedicalPassport from './MedicalPassport';
 import VirtualTryOn from './VirtualTryOn';
+
+// Assets
+import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
 
 export default function Home() {
   const { t } = useLanguage();
@@ -87,7 +90,7 @@ export default function Home() {
         
         <div className="relative z-10 flex items-start gap-4">
           <div className="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center shrink-0 border border-gold-500/30">
-            <Sparkles className="text-gold-500 w-5 h-5" />
+            <Headset className="text-gold-500 w-5 h-5" />
           </div>
           <div>
             <h3 className="font-serif text-lg text-gold-500 mb-1">{t('ai_concierge')}</h3>
@@ -154,16 +157,23 @@ export default function Home() {
                   {item.status === 'completed' && <div className="w-1.5 h-1.5 bg-obsidian-900 rounded-full" />}
                 </div>
                 
-                {/* Timeline Content */}
-                <div className={`flex-1 min-w-0 ${item.status === 'upcoming' ? 'opacity-50' : ''}`}>
-                  <div className="flex justify-between items-baseline mb-1">
-                    <h4 className={`font-medium text-sm truncate pr-2 ${item.status === 'current' ? 'text-gold-500' : 'text-gray-200'}`}>
-                      {t(item.type)}
-                    </h4>
-                    <span className="text-[10px] text-gray-500 font-mono tracking-widest whitespace-nowrap shrink-0">{item.time}</span>
+                  {/* Timeline Content */}
+                  <div className={`flex-1 min-w-0 ${item.status === 'upcoming' ? 'opacity-50' : ''}`}>
+                    <div className="flex justify-between items-baseline mb-1">
+                      <div className="flex items-center gap-2">
+                        <h4 className={`font-medium text-sm truncate pr-2 ${item.status === 'current' ? 'text-gold-500' : 'text-gray-200'}`}>
+                          {t(item.type)}
+                        </h4>
+                        {item.isUploaded && (
+                          <div className="flex items-center gap-1 bg-gold-500/10 text-gold-500 text-[8px] px-1.5 py-0.5 rounded border border-gold-500/20 font-bold uppercase tracking-tighter">
+                            <Plane className="w-2 h-2" /> Verified
+                          </div>
+                        )}
+                      </div>
+                      <span className="text-[10px] text-gray-500 font-mono tracking-widest whitespace-nowrap shrink-0">{item.time}</span>
+                    </div>
+                    <p className="text-xs text-gray-400 break-words line-clamp-2">{t(item.detail) !== item.detail ? t(item.detail) : item.detail}</p>
                   </div>
-                  <p className="text-xs text-gray-400 break-words line-clamp-2">{t(item.detail) !== item.detail ? t(item.detail) : item.detail}</p>
-                </div>
               </motion.div>
             ))}
           </AnimatePresence>
@@ -185,8 +195,14 @@ export default function Home() {
               <p className="text-[10px] text-gold-500 tracking-widest mt-1">{t('tryon_title')}</p>
             </div>
           </div>
-          <div className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-transparent hover:border-gold-500/30 transition-colors">
-            <img src="https://images.unsplash.com/photo-1519014616548-bf5fe4add90b?auto=format&fit=crop&q=80" alt="Signature Lift" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60" />
+          <div 
+            onClick={() => {
+              setActiveFilter('cat_plastic');
+              setActiveTab('artisans');
+            }} 
+            className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-transparent hover:border-gold-500/30 transition-colors"
+          >
+            <img src={signatureLiftingHero} alt="Signature Lift" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60" />
             <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/40 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4">
               <h4 className="font-serif text-sm">{t('signature_lift')}</h4>

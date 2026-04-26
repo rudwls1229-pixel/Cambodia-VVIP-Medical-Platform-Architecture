@@ -199,10 +199,21 @@ export default function Concierge() {
                           <h4 className="text-sm font-medium text-gray-200">항공권 업로드</h4>
                           <p className="text-[10px] text-gray-500 mt-0.5">공항 픽업 및 예약을 위해 필요합니다</p>
                         </div>
-                        {!isUploaded ? (
-                          <button onClick={() => setShowUpload(true)} className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-obsidian-900"><Plus size={20} /></button>
+                        {!booking.isUploaded ? (
+                          <button 
+                            onClick={() => {
+                              setSelectedBookingId(booking.id);
+                              setShowUpload(true);
+                            }} 
+                            className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-obsidian-900 shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:scale-110 transition-transform"
+                          >
+                            <Plus size={20} />
+                          </button>
                         ) : (
-                          <div className="flex items-center gap-2 text-gold-500"><FileText size={20} /><span className="text-xs font-bold uppercase tracking-tighter">Uploaded</span></div>
+                          <div className="flex items-center gap-2 text-gold-500">
+                            <FileText size={20} />
+                            <span className="text-xs font-bold uppercase tracking-tighter">Uploaded</span>
+                          </div>
                         )}
                       </div>
                     </div>
@@ -292,7 +303,18 @@ export default function Concierge() {
             <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm bg-obsidian-800 border border-gold-500/30 rounded-3xl p-8 text-center">
               <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold-500/20"><Upload size={40} className="text-gold-500" /></div>
               <h2 className="text-2xl font-serif text-gold-500 mb-2">항공권 업로드</h2>
-              <div onClick={() => { setIsUploaded(true); setShowUpload(false); }} className="border-2 border-dashed border-white/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-colors group"><Plus className="w-8 h-8 text-gray-600 mx-auto group-hover:text-gold-500 transition-colors" /><p className="text-xs text-gray-500 mt-2">Select Image or PDF</p></div>
+              <div 
+                onClick={() => {
+                  if (selectedBookingId) {
+                    toggleFlightTicket(selectedBookingId);
+                  }
+                  setShowUpload(false);
+                }} 
+                className="border-2 border-dashed border-white/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-colors group"
+              >
+                <Plus className="w-8 h-8 text-gray-600 mx-auto group-hover:text-gold-500 transition-colors" />
+                <p className="text-xs text-gray-500 mt-2">Select Image or PDF</p>
+              </div>
               <button onClick={() => setShowUpload(false)} className="w-full py-4 text-gray-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Cancel</button>
             </motion.div>
           </motion.div>

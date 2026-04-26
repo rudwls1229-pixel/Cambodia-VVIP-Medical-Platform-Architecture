@@ -18,8 +18,8 @@ export function AppDataProvider({ children }) {
   // Global Itinerary State
   const [schedule, setSchedule] = useState([
     { id: 't1', type: 'time_arrive', status: 'completed', time: '10:00 AM', detail: 'ICN Terminal 2' },
-    { id: 't2', type: 'time_consult', status: 'current', time: '2:30 PM', detail: 'dr_lee_clinic' },
-    { id: 't3', type: 'time_surgery', status: 'upcoming', time: '4:00 PM', detail: 'signature_lift' },
+    { id: 't2', type: 'time_consult', status: 'current', time: '2:30 PM', detail: 'dr_lee_clinic', isUploaded: false },
+    { id: 't3', type: 'time_surgery', status: 'upcoming', time: '4:00 PM', detail: 'signature_lift', isUploaded: false },
     { id: 't4', type: 'time_recover', status: 'upcoming', time: 'Tomorrow', detail: 'VIP Suite A' }
   ]);
 
@@ -82,7 +82,7 @@ export function AppDataProvider({ children }) {
       activeTab, setActiveTab,
       activeFilter, setActiveFilter,
       userProfile, setUserProfile,
-      schedule, addScheduleItem, 
+      schedule, addScheduleItem, toggleFlightTicket,
       posts, toggleEndorsement 
     }}>
       {children}
