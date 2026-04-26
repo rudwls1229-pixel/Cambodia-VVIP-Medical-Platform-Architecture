@@ -8,6 +8,8 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
   const [step, setStep] = useState(1);
   const [viewDate, setViewDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState(new Date());
+  const [selectedLogistics, setSelectedLogistics] = useState('icn_vip');
+  const [expandedLogistics, setExpandedLogistics] = useState(null);
 
   const daysInMonth = (date) => new Date(date.getFullYear(), date.getMonth() + 1, 0).getDate();
   const firstDayOfMonth = (date) => new Date(date.getFullYear(), date.getMonth(), 1).getDay();
@@ -130,21 +132,91 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
             {step === 2 && (
               <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }}>
                 <h3 className="text-lg font-serif mb-6">{t('wiz_step2')}</h3>
-                <div className="space-y-3">
-                  <div className="bg-gold-500/10 border border-gold-500/50 rounded-xl p-5 flex items-center justify-between">
-                    <div>
-                      <h4 className="font-medium text-gold-500">ICN VIP Terminal Pickup</h4>
-                      <p className="text-xs text-gray-400 mt-1">Maybach S680</p>
+                
+                <div className="space-y-4">
+                  {/* Option 1: VIP Pickup */}
+                  <div className={`border rounded-2xl transition-all duration-300 ${selectedLogistics === 'icn_vip' ? 'bg-gold-500/10 border-gold-500/50' : 'bg-obsidian-800 border-white/5'}`}>
+                    <div 
+                      onClick={() => setSelectedLogistics('icn_vip')}
+                      className="p-5 flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="flex-1 min-w-0 pr-4">
+                        <div className="flex items-center gap-2 mb-1 flex-wrap">
+                          <h4 className={`font-medium ${selectedLogistics === 'icn_vip' ? 'text-gold-500' : 'text-gray-300'}`}>
+                            ICN VIP Terminal Pickup
+                          </h4>
+                          <span className="text-[10px] bg-gold-500/20 text-gold-500 px-1.5 py-0.5 rounded font-mono">and escort $680</span>
+                        </div>
+                        <p className="text-xs text-gray-400">Maybach S680</p>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setExpandedLogistics(expandedLogistics === 'icn_vip' ? null : 'icn_vip'); }}
+                          className="text-[10px] text-gold-500 mt-2 hover:underline tracking-wider uppercase font-medium"
+                        >
+                          {expandedLogistics === 'icn_vip' ? '(Close)' : '(Details)'}
+                        </button>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedLogistics === 'icn_vip' ? 'border-gold-500' : 'border-gray-600'}`}>
+                        {selectedLogistics === 'icn_vip' && <div className="w-2.5 h-2.5 rounded-full bg-gold-500" />}
+                      </div>
                     </div>
-                    <div className="w-5 h-5 rounded-full bg-gold-500 flex items-center justify-center">
-                      <div className="w-2 h-2 rounded-full bg-obsidian-900" />
-                    </div>
+                    
+                    <AnimatePresence>
+                      {expandedLogistics === 'icn_vip' && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden px-5 pb-5"
+                        >
+                          <div className="pt-4 border-t border-white/10 space-y-2">
+                            <p className="text-[11px] text-gray-400 leading-relaxed italic">
+                              "Exclusive Maybach S680 pickup directly from the ICN VIP Gate. Includes personal concierge escort through immigration, 3 hours of chauffeur service, and luggage handling."
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
-                  <div className="bg-obsidian-800 border border-white/10 rounded-xl p-5 flex items-center justify-between opacity-50">
-                    <div>
-                      <h4 className="font-medium text-gray-300">Self Arrival</h4>
+
+                  {/* Option 2: Self Arrival */}
+                  <div className={`border rounded-2xl transition-all duration-300 ${selectedLogistics === 'self' ? 'bg-gold-500/10 border-gold-500/50' : 'bg-obsidian-800 border-white/5'}`}>
+                    <div 
+                      onClick={() => setSelectedLogistics('self')}
+                      className="p-5 flex items-center justify-between cursor-pointer"
+                    >
+                      <div className="flex-1 min-w-0 pr-4">
+                        <h4 className={`font-medium ${selectedLogistics === 'self' ? 'text-gold-500' : 'text-gray-300'}`}>
+                          Self Arrival
+                        </h4>
+                        <p className="text-xs text-gray-400 mt-1">Independent transport</p>
+                        <button 
+                          onClick={(e) => { e.stopPropagation(); setExpandedLogistics(expandedLogistics === 'self' ? null : 'self'); }}
+                          className="text-[10px] text-gold-500 mt-2 hover:underline tracking-wider uppercase font-medium"
+                        >
+                          {expandedLogistics === 'self' ? '(Close)' : '(Details)'}
+                        </button>
+                      </div>
+                      <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedLogistics === 'self' ? 'border-gold-500' : 'border-gray-600'}`}>
+                        {selectedLogistics === 'self' && <div className="w-2.5 h-2.5 rounded-full bg-gold-500" />}
+                      </div>
                     </div>
-                    <div className="w-5 h-5 rounded-full border border-gray-500" />
+                    
+                    <AnimatePresence>
+                      {expandedLogistics === 'self' && (
+                        <motion.div 
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: 'auto', opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          className="overflow-hidden px-5 pb-5"
+                        >
+                          <div className="pt-4 border-t border-white/10 space-y-2">
+                            <p className="text-[11px] text-gray-400 leading-relaxed italic">
+                              "Arrange your own transportation to the clinic. We will provide the exact GPS coordinates and contact details of your dedicated medical coordinator upon arrival."
+                            </p>
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               </motion.div>
