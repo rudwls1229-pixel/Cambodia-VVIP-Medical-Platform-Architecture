@@ -1,4 +1,4 @@
-import { Home, BookOpen, Users, Stethoscope, CalendarCheck } from 'lucide-react';
+import { Home, BookOpen, Users, Stethoscope, User } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAppData } from '../contexts/AppDataContext';
@@ -12,7 +12,7 @@ export default function Navigation() {
     { id: 'insights', icon: BookOpen, label: t('insights') },
     { id: 'circle', icon: Users, label: t('circle') },
     { id: 'artisans', icon: Stethoscope, label: t('artisans') },
-    { id: 'concierge', icon: CalendarCheck, label: t('my_bookings') },
+    { id: 'concierge', icon: User, label: t('my_page_title') },
   ];
 
   return (
