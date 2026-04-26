@@ -112,10 +112,8 @@ export default function Home() {
             <div 
               key={service.id} 
               onClick={() => {
-                if(service.id !== 'other') {
-                  setActiveFilter(service.id);
-                  setActiveTab('artisans');
-                }
+                setActiveFilter(service.id === 'other' ? 'cat_all' : service.id);
+                setActiveTab('artisans');
               }}
               className="flex flex-col items-center gap-2 group cursor-pointer"
             >
