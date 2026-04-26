@@ -10,4 +10,7 @@ export default defineConfig({
     tailwindcss(),
     viteSingleFile(),
   ],
+  build: {
+    emptyOutDir: false,
+  }
 })
