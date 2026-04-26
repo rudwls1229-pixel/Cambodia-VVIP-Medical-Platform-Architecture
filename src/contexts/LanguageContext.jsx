@@ -7,7 +7,7 @@ const translations = {
     insights: "Insights",
     circle: "Circle",
     artisans: "Artisans",
-    concierge: "Concierge",
+    my_bookings: "My Bookings",
 
     // Home
     welcome_back: "WELCOME BACK",
@@ -123,6 +123,12 @@ const translations = {
     wiz_step3: "Interpreter",
     wiz_step4: "Signature",
     wiz_confirm: "Confirm Reservation",
+    my_bookings_title: "My Bookings",
+    my_bookings_sub: "MANAGE YOUR JOURNEY",
+    upload_ticket: "Upload Flight Ticket",
+    upload_ticket_sub: "Required to confirm airport pickup & prevent no-shows",
+    confirmed_res: "Confirmed Reservation",
+    no_bookings: "No confirmed bookings yet.",
     voice_listening: "Listening...",
     voice_tap: "Tap to Speak",
 
@@ -161,7 +167,7 @@ const translations = {
     insights: "인사이트",
     circle: "서클",
     artisans: "아티잔",
-    concierge: "컨시어지",
+    my_bookings: "내 예약",
 
     welcome_back: "환영합니다",
     madame_kim: "김 마담님",
@@ -269,6 +275,12 @@ const translations = {
     wiz_step3: "전담 통역",
     wiz_step4: "전자 서명",
     wiz_confirm: "예약 확정",
+    my_bookings_title: "내 예약 내역",
+    my_bookings_sub: "당신의 여정을 관리하세요",
+    upload_ticket: "항공권 업로드",
+    upload_ticket_sub: "공항 픽업 확정 및 노쇼 방지를 위해 필요합니다",
+    confirmed_res: "확정된 예약",
+    no_bookings: "확정된 예약 내역이 없습니다.",
     voice_listening: "듣고 있습니다...",
     voice_tap: "눌러서 말하기",
 
@@ -305,7 +317,7 @@ const translations = {
     insights: "ការយល់ដឹង",
     circle: "រង្វង់ឯកជន",
     artisans: "គ្រូពេទ្យជំនាញ",
-    concierge: "សេវាកម្មជំនួយ",
+    my_bookings: "ការកក់របស់ខ្ញុំ",
 
     welcome_back: "សូមស្វាគមន៍ត្រលប់មកវិញ",
     madame_kim: "លោកស្រី Kim",
@@ -413,6 +425,12 @@ const translations = {
     wiz_step3: "អ្នកបកប្រែ",
     wiz_step4: "ហត្ថលេខា",
     wiz_confirm: "បញ្ជាក់ការកក់",
+    my_bookings_title: "ការកក់របស់ខ្ញុំ",
+    my_bookings_sub: "គ្រប់គ្រងការធ្វើដំណើររបស់អ្នក",
+    upload_ticket: "បង្ហោះសំបុត្រយន្តហោះ",
+    upload_ticket_sub: "តម្រូវឱ្យបញ្ជាក់ការទទួលនៅអាកាសយានដ្ឋាន និងការពារការខកខាន",
+    confirmed_res: "ការកក់ដែលបានបញ្ជាក់",
+    no_bookings: "មិនទាន់មានការកក់ដែលបានបញ្ជាក់នៅឡើយទេ។",
     voice_listening: "កំពុងស្តាប់...",
     voice_tap: "ចុចដើម្បីនិយាយ",
 
