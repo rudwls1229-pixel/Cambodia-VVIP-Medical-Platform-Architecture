@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from 'react';
+import defaultAvatar from '../assets/default_profile.png';
 
 const AppDataContext = createContext();
 
@@ -6,6 +7,13 @@ export function AppDataProvider({ children }) {
   // Global Navigation State
   const [activeTab, setActiveTab] = useState('home');
   const [activeFilter, setActiveFilter] = useState('cat_all');
+
+  // Global User Profile State
+  const [userProfile, setUserProfile] = useState({
+    name: 'Madame Kim',
+    avatar: defaultAvatar,
+    level: 'Lv.1'
+  });
 
   // Global Itinerary State
   const [schedule, setSchedule] = useState([
@@ -73,6 +81,7 @@ export function AppDataProvider({ children }) {
     <AppDataContext.Provider value={{ 
       activeTab, setActiveTab,
       activeFilter, setActiveFilter,
+      userProfile, setUserProfile,
       schedule, addScheduleItem, 
       posts, toggleEndorsement 
     }}>

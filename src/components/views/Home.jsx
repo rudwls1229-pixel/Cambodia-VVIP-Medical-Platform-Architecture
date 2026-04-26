@@ -8,7 +8,7 @@ import VirtualTryOn from './VirtualTryOn';
 
 export default function Home() {
   const { t } = useLanguage();
-  const { schedule, setActiveTab, setActiveFilter } = useAppData();
+  const { schedule, setActiveTab, setActiveFilter, userProfile } = useAppData();
   
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -65,13 +65,13 @@ export default function Home() {
       <header className="mb-8 flex justify-between items-end">
         <div>
           <h2 className="text-gray-400 text-sm tracking-widest mb-1">{t('welcome_back')}</h2>
-          <h1 className="text-2xl font-serif text-gray-100">{t('madame_kim')}</h1>
+          <h1 className="text-2xl font-serif text-gray-100">{userProfile.name}</h1>
         </div>
         <button 
-          onClick={() => setShowPassport(true)}
+          onClick={() => setActiveTab('concierge')}
           className="w-10 h-10 rounded-full bg-obsidian-700 border border-gold-500/30 overflow-hidden relative group"
         >
-          <img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" alt="Profile" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+          <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
           <div className="absolute inset-0 bg-gold-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors" />
         </button>
       </header>

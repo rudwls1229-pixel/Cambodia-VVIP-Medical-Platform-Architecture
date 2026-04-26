@@ -9,11 +9,10 @@ import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Concierge() {
   const { t } = useLanguage();
-  const { schedule } = useAppData();
+  const { schedule, userProfile, setUserProfile } = useAppData();
   const [view, setView] = useState('profile'); // profile, bookings, settings
   const [showUpload, setShowUpload] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
-  const [profileImage, setProfileImage] = useState(defaultAvatar);
   
   const fileInputRef = useRef(null);
 
@@ -30,7 +29,7 @@ export default function Concierge() {
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
-        setProfileImage(reader.result);
+        setUserProfile(prev => ({ ...prev, avatar: reader.result }));
       };
       reader.readAsDataURL(file);
     }
@@ -107,7 +106,7 @@ export default function Concierge() {
                   className="w-20 h-20 rounded-full border-2 border-gold-500/30 p-1 cursor-pointer relative group"
                 >
                   <img 
-                    src={profileImage} 
+                    src={userProfile.avatar} 
                     className="w-full h-full rounded-full object-cover transition-opacity group-hover:opacity-60" 
                     alt="Avatar" 
                   />
@@ -116,8 +115,8 @@ export default function Concierge() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif text-white mb-1">{t('madame_kim')}</h2>
-                  <span className="text-[10px] font-bold bg-gold-500 text-obsidian-900 px-2 py-0.5 rounded tracking-widest uppercase">{t('my_level')}</span>
+                  <h2 className="text-xl font-serif text-white mb-1">{userProfile.name}</h2>
+                  <span className="text-[10px] font-bold bg-gold-500 text-obsidian-900 px-2 py-0.5 rounded tracking-widest uppercase">{userProfile.level}</span>
                 </div>
               </div>
 
