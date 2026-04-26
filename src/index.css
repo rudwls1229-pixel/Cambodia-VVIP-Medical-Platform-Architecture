@@ -1,0 +1,46 @@
+@import "tailwindcss";
+
+@theme {
+  --color-gold-500: #D4AF37;
+  --color-gold-600: #B5952F;
+  --color-obsidian-900: #050505;
+  --color-obsidian-800: #121212;
+  --color-obsidian-700: #1f1f1f;
+  
+  --font-serif-en: "Playfair Display", serif;
+  --font-serif-ko: "Noto Serif KR", serif;
+  --font-serif-km: "Noto Serif Khmer", serif;
+  --font-sans: "Outfit", sans-serif;
+}
+
+@layer base {
+  body {
+    @apply bg-obsidian-900 text-gray-200 font-sans antialiased;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif-en text-gold-500;
+  }
+
+  /* Language-specific typography overrides */
+  .lang-ko h1, .lang-ko h2, .lang-ko h3, .lang-ko h4, .lang-ko h5, .lang-ko h6, .lang-ko .font-serif {
+    font-family: var(--font-serif-ko) !important;
+  }
+
+  .lang-km h1, .lang-km h2, .lang-km h3, .lang-km h4, .lang-km h5, .lang-km h6, .lang-km .font-serif {
+    font-family: var(--font-serif-km) !important;
+  }
+
+  .lang-en h1, .lang-en h2, .lang-en h3, .lang-en h4, .lang-en h5, .lang-en h6, .lang-en .font-serif {
+    font-family: var(--font-serif-en) !important;
+  }
+}
+
+/* Hide scrollbar for a cleaner mobile app feel */
+::-webkit-scrollbar {
+  display: none;
+}
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
