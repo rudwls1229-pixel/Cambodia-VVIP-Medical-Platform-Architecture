@@ -1,8 +1,11 @@
-import { useState } from 'react';
-import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, Mail, HelpCircle, Info, Search, ArrowLeft } from 'lucide-react';
+import { useState, useRef } from 'react';
+import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, Mail, HelpCircle, Info, Search, ArrowLeft, LogOut, UserMinus } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
+
+// Default avatar
+import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Concierge() {
   const { t } = useLanguage();
@@ -10,10 +13,28 @@ export default function Concierge() {
   const [view, setView] = useState('profile'); // profile, bookings, settings
   const [showUpload, setShowUpload] = useState(false);
   const [isUploaded, setIsUploaded] = useState(false);
+  const [profileImage, setProfileImage] = useState(defaultAvatar);
+  
+  const fileInputRef = useRef(null);
 
   const confirmedBookings = schedule.filter(item => 
     item.type === 'time_surgery' || item.type === 'time_consult'
   );
+
+  const handleProfileClick = () => {
+    fileInputRef.current.click();
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfileImage(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
 
   const MenuButton = ({ icon: Icon, label, badge, onClick }) => (
     <button 
@@ -37,8 +58,32 @@ export default function Concierge() {
     </button>
   );
 
+  const SettingsRow = ({ label, value, hasArrow = true, isSwitch = false }) => (
+    <div className="flex items-center justify-between py-4 border-b border-white/5 last:border-0 cursor-pointer group">
+      <span className="text-sm text-gray-200 group-hover:text-white transition-colors">{label}</span>
+      <div className="flex items-center gap-3">
+        {value && <span className="text-xs text-gray-500 font-mono">{value}</span>}
+        {isSwitch ? (
+          <div className="w-10 h-5 bg-gold-500 rounded-full relative">
+            <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" />
+          </div>
+        ) : hasArrow && (
+          <ChevronRight size={16} className="text-gray-600 group-hover:text-gold-500 transition-colors" />
+        )}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="pt-12 min-h-screen bg-obsidian-900 pb-24">
+    <div className="pt-24 min-h-screen bg-obsidian-900 pb-24 relative overflow-x-hidden">
+      <input 
+        type="file" 
+        ref={fileInputRef} 
+        onChange={handleFileChange} 
+        className="hidden" 
+        accept="image/*"
+      />
+
       <AnimatePresence mode="wait">
         {view === 'profile' && (
           <motion.div 
@@ -55,15 +100,20 @@ export default function Concierge() {
               </button>
             </header>
 
-            {/* Profile Section */}
-            <div className="bg-obsidian-800/50 border border-white/5 rounded-3xl p-6 mb-6">
+            <div className="bg-obsidian-800/50 border border-white/5 rounded-3xl p-6 mb-8">
               <div className="flex items-center gap-5 mb-8">
-                <div className="w-20 h-20 rounded-full border-2 border-gold-500/30 p-1">
+                <div 
+                  onClick={handleProfileClick}
+                  className="w-20 h-20 rounded-full border-2 border-gold-500/30 p-1 cursor-pointer relative group"
+                >
                   <img 
-                    src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100&h=100" 
-                    className="w-full h-full rounded-full object-cover" 
+                    src={profileImage} 
+                    className="w-full h-full rounded-full object-cover transition-opacity group-hover:opacity-60" 
                     alt="Avatar" 
                   />
+                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <Plus className="w-6 h-6 text-gold-500" />
+                  </div>
                 </div>
                 <div>
                   <h2 className="text-xl font-serif text-white mb-1">{t('madame_kim')}</h2>
@@ -87,20 +137,6 @@ export default function Concierge() {
               </div>
             </div>
 
-            {/* Beta Banner */}
-            <div className="bg-gradient-to-r from-gold-500/10 to-transparent border border-gold-500/20 rounded-2xl p-5 mb-8 flex items-center justify-between group cursor-pointer">
-              <div className="flex items-center gap-4">
-                <div className="w-10 h-10 rounded-xl bg-gold-500/20 flex items-center justify-center text-gold-500">
-                  <Search size={20} />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-300 font-medium">나와 비슷한 사람은 어떻게 변했을까?</p>
-                  <p className="text-sm text-gold-500 font-bold">내 사진으로 찾아보기 <span className="ml-2 text-[10px] bg-gold-500/20 px-1.5 py-0.5 rounded uppercase font-mono">BETA</span></p>
-                </div>
-              </div>
-            </div>
-
-            {/* Main Menu List */}
             <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-2 mb-8">
               <MenuButton icon={Calendar} label={t('my_bookings_pay')} onClick={() => setView('bookings')} />
               <MenuButton icon={Heart} label={t('my_liked')} />
@@ -109,7 +145,6 @@ export default function Concierge() {
               <MenuButton icon={Mail} label={t('my_msgs')} />
             </div>
 
-            {/* Sub Menu List */}
             <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-4">
               <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('cust_center')}</button>
               <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('notice')}</button>
@@ -196,25 +231,54 @@ export default function Concierge() {
               <button onClick={() => setView('profile')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
                 <ArrowLeft className="w-6 h-6 text-gray-400" />
               </button>
-              <h1 className="text-2xl font-serif text-white">{t('settings_title')}</h1>
+              <h1 className="text-2xl font-serif text-white">더 보기</h1>
             </header>
 
-            <div className="space-y-6">
-              <section className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-6">
-                <h3 className="text-xs text-gray-500 uppercase tracking-widest">Account</h3>
-                <button className="w-full text-left text-sm text-gray-200 flex justify-between items-center">개인정보 보호 <ChevronRight size={14} /></button>
-                <button className="w-full text-left text-sm text-gray-200 flex justify-between items-center">로그인 보안 <ChevronRight size={14} /></button>
+            <div className="space-y-8">
+              {/* Service Info */}
+              <section>
+                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('service_info')}</h3>
+                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
+                  <SettingsRow label={t('version_info')} value="v 3.311.1 (749)" hasArrow={false} />
+                  <SettingsRow label={t('partnership')} />
+                  <SettingsRow label={t('terms')} />
+                  <SettingsRow label={t('privacy')} />
+                  <SettingsRow label={t('location_terms')} />
+                </div>
               </section>
 
-              <section className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-6">
-                <h3 className="text-xs text-gray-500 uppercase tracking-widest">App Settings</h3>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-200">푸시 알림</span>
-                  <div className="w-10 h-5 bg-gold-500 rounded-full relative"><div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" /></div>
+              {/* Notification Settings */}
+              <section>
+                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('notif_settings')}</h3>
+                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
+                  <SettingsRow label={t('gen_notif')} isSwitch={true} />
+                  <SettingsRow label={t('notes_notif')} isSwitch={true} />
                 </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-sm text-gray-200">다크 모드</span>
-                  <div className="w-10 h-5 bg-gold-500 rounded-full relative"><div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-sm" /></div>
+              </section>
+
+              {/* Marketing Settings */}
+              <section>
+                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('marketing_info')}</h3>
+                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
+                  <SettingsRow label={t('push')} isSwitch={true} />
+                  <SettingsRow label="SMS" isSwitch={true} />
+                  <SettingsRow label="Email" isSwitch={true} />
+                  <SettingsRow label={t('night_push')} isSwitch={true} />
+                </div>
+              </section>
+
+              {/* Account Management */}
+              <section>
+                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('acc_mgmt')}</h3>
+                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
+                  <button className="w-full flex items-center justify-between py-4 text-sm text-gray-200 hover:text-white group">
+                    <span>{t('logout')}</span>
+                    <LogOut size={16} className="text-gray-600 group-hover:text-gold-500" />
+                  </button>
+                  <button className="w-full flex items-center justify-between py-4 text-sm text-gray-200 hover:text-white group border-t border-white/5">
+                    <span>{t('delete_acc')}</span>
+                    <UserMinus size={16} className="text-gray-600 group-hover:text-red-500" />
+                  </button>
                 </div>
               </section>
             </div>
