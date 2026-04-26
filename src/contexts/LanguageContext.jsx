@@ -147,7 +147,14 @@ const translations = {
     clinic_1: "Grand Plastic Surgery",
     clinic_2: "Seoul National Dental",
     proc_1: "Signature Stem Cell Anti-Aging Lift",
-    proc_2: "3D Premium Implant & Whitening"
+    proc_2: "3D Premium Implant & Whitening",
+    log_vip_title: "ICN VIP Terminal Pickup",
+    log_vip_escort: "and escort $680",
+    log_vip_car: "Maybach S680",
+    log_vip_detail: "Exclusive Maybach S680 pickup directly from the ICN VIP Gate. Includes personal concierge escort through immigration, 3 hours of chauffeur service, and luggage handling.",
+    log_self_title: "Self Arrival",
+    log_self_sub: "Independent transport",
+    log_self_detail: "Arrange your own transportation to the clinic. We will provide the exact GPS coordinates and contact details of your dedicated medical coordinator upon arrival."
   },
   KO: {
     home: "홈",
@@ -284,7 +291,14 @@ const translations = {
     clinic_1: "그랜드 성형외과",
     clinic_2: "서울 내셔널 치과",
     proc_1: "시그니처 줄기세포 안티에이징 리프팅",
-    proc_2: "3D 프리미엄 임플란트 및 미백"
+    proc_2: "3D 프리미엄 임플란트 및 미백",
+    log_vip_title: "인천공항 VIP 터미널 픽업",
+    log_vip_escort: "에스코트 포함 $680",
+    log_vip_car: "마이바흐 S680",
+    log_vip_detail: "인천공항 VIP 게이트에서 전용 마이바흐 S680으로 픽업해 드립니다. 입국 심사 패스트트랙 에스코트, 3시간 쇼퍼 서비스, 수하물 핸들링 서비스가 포함되어 있습니다.",
+    log_self_title: "자가 도착",
+    log_self_sub: "개별 이동",
+    log_self_detail: "병원을 직접 방문하시는 옵션입니다. 예약 확정 시 담당 의료 코디네이터의 연락처와 구글 맵 좌표를 보내드립니다."
   },
   KM: {
     home: "ទំព័រដើម",
@@ -421,7 +435,14 @@ const translations = {
     clinic_1: "Grand Plastic Surgery",
     clinic_2: "Seoul National Dental",
     proc_1: "ការលើកមុខប្រឆាំងភាពចាស់កោសិកាដើម",
-    proc_2: "ការផ្សាំធ្មេញ 3D កម្រិតខ្ពស់ និងធ្វើឱ្យស"
+    proc_2: "ការផ្សាំធ្មេញ 3D កម្រិតខ្ពស់ និងធ្វើឱ្យស",
+    log_vip_title: "សេវាទទួលនៅស្ថានីយ VIP អាកាសយានដ្ឋាន ICN",
+    log_vip_escort: "និងការអមដំណើរ $680",
+    log_vip_car: "Maybach S680",
+    log_vip_detail: "ការទទួលដោយរថយន្ត Maybach S680 ផ្តាច់មុខដោយផ្ទាល់ពីច្រកទ្វារ VIP របស់ ICN។ រួមបញ្ចូលទាំងការអមដំណើរផ្ទាល់ខ្លួនតាមរយៈអន្តោប្រវេសន៍ សេវាកម្មអ្នកបើកបររយៈពេល ៣ ម៉ោង និងការរៀបចំឥវ៉ាន់។",
+    log_self_title: "ការមកដល់ដោយខ្លួនឯង",
+    log_self_sub: "ការដឹកជញ្ជូនឯករាជ្យ",
+    log_self_detail: "រៀបចំការដឹកជញ្ជូនផ្ទាល់ខ្លួនរបស់អ្នកទៅកាន់គ្លីនិក។ យើងនឹងផ្តល់នូវកូអរដោនេ GPS ច្បាស់លាស់ និងព័ត៌មានទំនាក់ទំនងរបស់អ្នកសម្របសម្រួលវេជ្ជសាស្ត្ររបស់អ្នកនៅពេលមកដល់។"
   }
 };
 

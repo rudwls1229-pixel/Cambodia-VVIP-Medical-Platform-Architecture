@@ -143,16 +143,16 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                       <div className="flex-1 min-w-0 pr-4">
                         <div className="flex items-center gap-2 mb-1 flex-wrap">
                           <h4 className={`font-medium ${selectedLogistics === 'icn_vip' ? 'text-gold-500' : 'text-gray-300'}`}>
-                            ICN VIP Terminal Pickup
+                            {t('log_vip_title')}
                           </h4>
-                          <span className="text-[10px] bg-gold-500/20 text-gold-500 px-1.5 py-0.5 rounded font-mono">and escort $680</span>
+                          <span className="text-[10px] bg-gold-500/20 text-gold-500 px-1.5 py-0.5 rounded font-mono">{t('log_vip_escort')}</span>
                         </div>
-                        <p className="text-xs text-gray-400">Maybach S680</p>
+                        <p className="text-xs text-gray-400">{t('log_vip_car')}</p>
                         <button 
                           onClick={(e) => { e.stopPropagation(); setExpandedLogistics(expandedLogistics === 'icn_vip' ? null : 'icn_vip'); }}
                           className="text-[10px] text-gold-500 mt-2 hover:underline tracking-wider uppercase font-medium"
                         >
-                          {expandedLogistics === 'icn_vip' ? '(Close)' : '(Details)'}
+                          {expandedLogistics === 'icn_vip' ? `(CLOSE)` : `(DETAILS)`}
                         </button>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedLogistics === 'icn_vip' ? 'border-gold-500' : 'border-gray-600'}`}>
@@ -170,7 +170,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                         >
                           <div className="pt-4 border-t border-white/10 space-y-2">
                             <p className="text-[11px] text-gray-400 leading-relaxed italic">
-                              "Exclusive Maybach S680 pickup directly from the ICN VIP Gate. Includes personal concierge escort through immigration, 3 hours of chauffeur service, and luggage handling."
+                              "{t('log_vip_detail')}"
                             </p>
                           </div>
                         </motion.div>
@@ -186,14 +186,14 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                     >
                       <div className="flex-1 min-w-0 pr-4">
                         <h4 className={`font-medium ${selectedLogistics === 'self' ? 'text-gold-500' : 'text-gray-300'}`}>
-                          Self Arrival
+                          {t('log_self_title')}
                         </h4>
-                        <p className="text-xs text-gray-400 mt-1">Independent transport</p>
+                        <p className="text-xs text-gray-400 mt-1">{t('log_self_sub')}</p>
                         <button 
                           onClick={(e) => { e.stopPropagation(); setExpandedLogistics(expandedLogistics === 'self' ? null : 'self'); }}
                           className="text-[10px] text-gold-500 mt-2 hover:underline tracking-wider uppercase font-medium"
                         >
-                          {expandedLogistics === 'self' ? '(Close)' : '(Details)'}
+                          {expandedLogistics === 'self' ? `(CLOSE)` : `(DETAILS)`}
                         </button>
                       </div>
                       <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center shrink-0 ${selectedLogistics === 'self' ? 'border-gold-500' : 'border-gray-600'}`}>
@@ -211,7 +211,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                         >
                           <div className="pt-4 border-t border-white/10 space-y-2">
                             <p className="text-[11px] text-gray-400 leading-relaxed italic">
-                              "Arrange your own transportation to the clinic. We will provide the exact GPS coordinates and contact details of your dedicated medical coordinator upon arrival."
+                              "{t('log_self_detail')}"
                             </p>
                           </div>
                         </motion.div>
