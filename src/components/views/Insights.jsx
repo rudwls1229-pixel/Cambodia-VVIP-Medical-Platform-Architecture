@@ -9,26 +9,16 @@ import exosomesHero from '../../assets/exosomes_hero.png';
 import recoveryHero from '../../assets/recovery_hero.png';
 
 function ParallaxArticle({ article, isFeatured, onClick }) {
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"]
-  });
-  
-  const y = useTransform(scrollYProgress, [0, 1], ["-15%", "15%"]);
-
   if (isFeatured) {
     return (
       <article 
-        ref={ref} 
         onClick={() => onClick(article)}
         className="relative w-full aspect-[4/5] rounded-2xl overflow-hidden group cursor-pointer border border-white/5"
       >
-        <motion.img 
-          style={{ y }}
+        <img 
           src={article.image} 
           alt={article.title} 
-          className="absolute inset-0 w-full h-[130%] object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000" 
+          className="absolute inset-0 w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-1000" 
         />
         <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/60 to-transparent" />
         
@@ -50,16 +40,14 @@ function ParallaxArticle({ article, isFeatured, onClick }) {
 
   return (
     <article 
-      ref={ref} 
       onClick={() => onClick(article)}
       className="flex gap-4 group cursor-pointer items-center border-b border-white/5 pb-6 overflow-hidden"
     >
       <div className="w-24 h-32 shrink-0 rounded-lg overflow-hidden relative">
-        <motion.img 
-          style={{ y }}
+        <img 
           src={article.image} 
           alt={article.title} 
-          className="absolute inset-0 w-full h-[130%] object-cover opacity-70 group-hover:scale-110 transition-transform duration-700" 
+          className="absolute inset-0 w-full h-full object-cover opacity-70 group-hover:scale-110 transition-transform duration-700" 
         />
       </div>
       <div className="flex-1">
@@ -179,7 +167,7 @@ export default function Insights() {
   }, [selectedArticle]);
 
   return (
-    <div className="pt-12 px-6 pb-24 min-h-screen bg-obsidian-900 relative">
+    <div className="pt-24 px-6 pb-24 min-h-screen bg-obsidian-900 relative">
       <AnimatePresence mode="wait">
         {!selectedArticle ? (
           <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
