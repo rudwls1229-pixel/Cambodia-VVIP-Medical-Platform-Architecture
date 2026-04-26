@@ -5,6 +5,10 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import BookingWizard from './BookingWizard';
 
+// Import premium generated assets
+import stemCellHero from '../../assets/stem_cell_hero.png';
+import dentalHero from '../../assets/dental_hero.png';
+
 export default function MedicalArtisans() {
   const { t, lang } = useLanguage();
   const { addScheduleItem, activeFilter, setActiveFilter } = useAppData();
@@ -33,7 +37,7 @@ export default function MedicalArtisans() {
       originalPrice: 25000000,
       discountPrice: 15000000,
       discountRate: 40,
-      image: "https://images.unsplash.com/photo-1519014616548-bf5fe4add90b?auto=format&fit=crop&q=80",
+      image: stemCellHero,
       description: lang === 'KO' 
         ? "시그니처 줄기세포 안티에이징 리프팅은 최첨단 줄기세포 배양액을 사용하여 피부 본연의 재생 능력을 극대화하고 깊은 주름을 근본적으로 개선하는 하이엔드 리프팅 시술입니다."
         : "Signature Stem Cell Anti-Aging Lift is a high-end lifting procedure that maximizes skin's natural regenerative ability and fundamentally improves deep wrinkles using state-of-the-art stem cell culture media.",
@@ -55,7 +59,7 @@ export default function MedicalArtisans() {
       originalPrice: 8500000,
       discountPrice: 6800000,
       discountRate: 20,
-      image: "https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80",
+      image: dentalHero,
       description: lang === 'KO'
         ? "3D 프리미엄 임플란트는 디지털 가이드 시스템을 통해 오차 없는 정밀한 식립을 보장하며, 시술 당일 식사가 가능한 원데이 보철 시스템을 제공합니다."
         : "3D Premium Implant guarantees precise placement without errors through a digital guide system and provides a one-day prosthetic system that allows meals on the same day of the procedure.",
