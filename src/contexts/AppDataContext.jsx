@@ -64,6 +64,12 @@ export function AppDataProvider({ children }) {
     ]);
   };
 
+  const toggleFlightTicket = (itemId) => {
+    setSchedule(prev => prev.map(item => 
+      item.id === itemId ? { ...item, isUploaded: true } : item
+    ));
+  };
+
   const toggleEndorsement = (postId) => {
     setPosts(prev => prev.map(post => {
       if (post.id === postId) {
