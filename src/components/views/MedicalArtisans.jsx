@@ -8,6 +8,8 @@ import BookingWizard from './BookingWizard';
 // Import premium generated assets
 import stemCellHero from '../../assets/stem_cell_hero.png';
 import dentalHero from '../../assets/dental_hero.png';
+import breastHero from '../../assets/breast_hero.png';
+import noseHero from '../../assets/nose_hero.png';
 
 export default function MedicalArtisans() {
   const { t, lang } = useLanguage();
@@ -69,6 +71,48 @@ export default function MedicalArtisans() {
         { name: "Dr. James Han", spec: "Oral Surgeon", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80" }
       ],
       address: "12, Gangnam-daero 94-gil, Gangnam-gu, Seoul"
+    },
+    {
+      id: 3,
+      title: t('proc_3'),
+      clinicName: t('clinic_3'),
+      category: "cat_plastic",
+      rating: "5.0",
+      reviews: 512,
+      originalPrice: 35000000,
+      discountPrice: 21000000,
+      discountRate: 40,
+      image: breastHero,
+      description: lang === 'KO'
+        ? "Full HD 프리미엄 가슴 성형은 최첨단 내시경 장비를 사용하여 통증과 흉터를 최소화하며, 고객의 체형에 가장 자연스럽고 조화로운 라인을 완성합니다."
+        : "Full HD Premium Breast Augmentation uses state-of-the-art endoscopic equipment to minimize pain and scarring, creating the most natural and harmonious lines for each body type.",
+      duration: "150 min",
+      recovery: "7-10 Days",
+      doctors: [
+        { name: "Dr. Kim Sung-hun", spec: "Breast Surgery Specialist", img: "https://images.unsplash.com/photo-1559839734-2b71f1536783?auto=format&fit=crop&q=80" }
+      ],
+      address: "24, Dosan-daero 13-gil, Gangnam-gu, Seoul"
+    },
+    {
+      id: 4,
+      title: t('proc_4'),
+      clinicName: t('clinic_4'),
+      category: "cat_plastic",
+      rating: "4.9",
+      reviews: 728,
+      originalPrice: 18000000,
+      discountPrice: 12600000,
+      discountRate: 30,
+      image: noseHero,
+      description: lang === 'KO'
+        ? "구조적 코 성형은 단순히 높이는 것이 아니라 코의 내부 구조를 튼튼하게 재건하여 아름다운 모양과 호흡 기능을 동시에 개선하는 프리미엄 성형 솔루션입니다."
+        : "Structural Nose Reshaping is a premium solution that doesn't just increase height but reconstructs the internal structure of the nose to improve both aesthetic shape and breathing function.",
+      duration: "120 min",
+      recovery: "5-7 Days",
+      doctors: [
+        { name: "Dr. Lee Do-hyun", spec: "Rhinoplasty Artisan", img: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80" }
+      ],
+      address: "15, Apgujeong-ro 28-gil, Gangnam-gu, Seoul"
     }
   ];
 
