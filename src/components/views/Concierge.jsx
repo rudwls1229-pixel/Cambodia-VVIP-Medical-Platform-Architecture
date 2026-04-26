@@ -9,10 +9,10 @@ import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Concierge() {
   const { t } = useLanguage();
-  const { schedule, userProfile, setUserProfile } = useAppData();
+  const { schedule, userProfile, setUserProfile, toggleFlightTicket } = useAppData();
   const [view, setView] = useState('profile'); // profile, bookings, settings
   const [showUpload, setShowUpload] = useState(false);
-  const [isUploaded, setIsUploaded] = useState(false);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
   
   const fileInputRef = useRef(null);
 
@@ -296,7 +296,7 @@ export default function Concierge() {
         )}
       </AnimatePresence>
 
-      {/* Upload Modal (Existing) */}
+      {/* Upload Modal */}
       <AnimatePresence>
         {showUpload && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6">
