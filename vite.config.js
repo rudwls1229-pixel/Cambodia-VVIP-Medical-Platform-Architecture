@@ -11,10 +11,9 @@ export default defineConfig({
     viteSingleFile(),
   ],
   build: {
-    target: 'es2015',
+    target: ['es2020', 'edge88', 'firefox78', 'chrome87', 'safari14'],
     minify: 'esbuild',
     emptyOutDir: false,
-    polyfillDynamicImport: false,
-    cssTarget: 'safari11'
+    cssTarget: 'safari14'
   }
 })
