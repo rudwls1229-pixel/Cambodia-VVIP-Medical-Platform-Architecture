@@ -7,7 +7,7 @@ import MedicalPassport from './MedicalPassport';
 import VirtualTryOn from './VirtualTryOn';
 
 // Assets
-import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
+const signatureLiftingHero = 'https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80';
 
 export default function Home() {
   const { t } = useLanguage();

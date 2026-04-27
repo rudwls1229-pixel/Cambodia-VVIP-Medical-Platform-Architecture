@@ -5,11 +5,11 @@ import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import BookingWizard from './BookingWizard';
 
-// Import premium generated assets
-import stemCellHero from '../../assets/stem_cell_hero.png';
-import dentalHero from '../../assets/dental_hero.png';
-import breastHero from '../../assets/breast_hero.png';
-import noseHero from '../../assets/nose_hero.png';
+// Premium assets (External URLs for mobile compatibility)
+const stemCellHero = 'https://images.unsplash.com/photo-1579154204601-01588f351e67?auto=format&fit=crop&q=80';
+const dentalHero = 'https://images.unsplash.com/photo-1588776814546-1ffcf47267a5?auto=format&fit=crop&q=80';
+const breastHero = 'https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&q=80';
+const noseHero = 'https://images.unsplash.com/photo-1516549221187-df702830cb3d?auto=format&fit=crop&q=80';
 
 export default function MedicalArtisans() {
   const { t, lang } = useLanguage();
