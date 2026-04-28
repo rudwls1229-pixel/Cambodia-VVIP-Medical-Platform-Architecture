@@ -27,23 +27,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Serif+Khmer:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root">
-      <div style="background: #050505; color: #D4AF37; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; padding: 40px; text-align: center;">
-        <div style="font-size: 24px; letter-spacing: 0.3em; margin-bottom: 20px;">THE SEOUL PRIVATE</div>
-        <div id="status-msg" style="font-size: 12px; opacity: 0.7; letter-spacing: 0.1em; font-family: sans-serif;">INITIALIZING SYSTEM...</div>
-        <div id="debug-info" style="margin-top: 40px; font-family: monospace; font-size: 10px; opacity: 0.5; color: #aaa;"></div>
-        <script>
-          // Basic capability check
-          try {
-            var test = Object.assign({}, {a:1});
-            document.getElementById('debug-info').innerHTML = 'SYSTEM CHECK: PASSED (V1.2.4)<br>WAITING FOR CORE ENGINE...';
-          } catch(e) {
-            document.getElementById('status-msg').innerHTML = 'BROWSER INCOMPATIBILITY DETECTED';
-            document.getElementById('debug-info').innerHTML = 'ERROR: MISSING MODERN JS SUPPORT';
-          }
-        </script>
-      </div>
+    <div id="boot-loader" style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0e1a;color:#D4AF37;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:serif;z-index:99999;text-align:center;padding:20px;">
+      <div style="font-size:24px;letter-spacing:0.3em;margin-bottom:10px;">THE SEOUL PRIVATE</div>
+      <div id="status-msg" style="font-size:12px;opacity:0.8;font-family:sans-serif;">SYSTEM STARTING...</div>
+      <div id="debug-info" style="margin-top:30px;font-family:monospace;font-size:10px;opacity:0.6;color:#888;"></div>
+      <div style="margin-top:50px;font-size:9px;opacity:0.4;">VERSION: 1.2.5 (STABLE BASE)</div>
+      <script>
+        try {
+          document.getElementById('debug-info').innerHTML = 'CHECKING ENGINE: OK<br>BROWSER: ' + navigator.userAgent.substring(0, 50) + '...';
+        } catch(e) {}
+      </script>
     </div>
+    <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
