@@ -1,11 +1,11 @@
 {
   "name": "the-seoul-private",
   "private": true,
-  "version": "1.2.7",
+  "version": "1.2.8",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build && cmd /c copy dist\\index.html dist\\the-seoul-private-v%npm_package_version%.html && cmd /c copy dist\\index.html dist\\the-seoul-private-v%npm_package_version%.htm",
+    "build": "vite build && node scripts/fix-bundle.js && cmd /c copy dist\\index.html dist\\the-seoul-private-v%npm_package_version%.html && cmd /c copy dist\\index.html dist\\the-seoul-private-v%npm_package_version%.htm",
     "lint": "eslint .",
     "preview": "vite preview"
   },
