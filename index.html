@@ -3,14 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <script>
-      // Global Error Catcher
+      // Aggressive Global Error Catcher
       window.onerror = function(msg, url, line, col, error) {
+        var summary = "APP CRASH:\n" + msg + "\nLine: " + line + "\nCol: " + col;
+        alert(summary); // Native alert is most reliable
         var errDiv = document.getElementById('debug-info');
-        if (errDiv) {
-          errDiv.innerHTML = '<div style="color:#ff4d4d;margin-top:20px;font-weight:bold;">CRASH DETECTED:</div>' + 
-                             '<div style="font-size:10px;margin-top:5px;word-break:break-all;">' + msg + '</div>' +
-                             '<div style="font-size:10px;">Line: ' + line + ' Col: ' + col + '</div>';
-        }
+        if (errDiv) errDiv.innerHTML = '<div style="color:red;font-weight:bold;">' + summary.replace(/\n/g, '<br>') + '</div>';
         return false;
       };
     </script>
