@@ -1,11 +1,7 @@
 {
   "name": "the-seoul-private",
   "private": true,
-<<<<<<< HEAD
   "version": "1.2.2",
-=======
-  "version": "1.2.1",
->>>>>>> f968c0108560d7f5b550e0c2870e734691576efa
   "type": "module",
   "scripts": {
     "dev": "vite",
