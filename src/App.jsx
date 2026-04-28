@@ -1,14 +1,23 @@
-import { useState } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import Navigation from './components/Navigation';
-import LoginFlow from './components/views/LoginFlow';
-import Home from './components/views/Home';
-import Insights from './components/views/Insights';
-import PrivateCircle from './components/views/PrivateCircle';
-import MedicalArtisans from './components/views/MedicalArtisans';
-import Concierge from './components/views/Concierge';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AppDataProvider, useAppData } from './contexts/AppDataContext';
+
+// Lazy load views for better performance and mobile compatibility
+const LoginFlow = lazy(() => import('./components/views/LoginFlow'));
+const Home = lazy(() => import('./components/views/Home'));
+const Insights = lazy(() => import('./components/views/Insights'));
+const PrivateCircle = lazy(() => import('./components/views/PrivateCircle'));
+const MedicalArtisans = lazy(() => import('./components/views/MedicalArtisans'));
+const Concierge = lazy(() => import('./components/views/Concierge'));
+
+// Loading fallback component
+const ViewLoading = () => (
+  <div className="flex items-center justify-center h-full min-h-[60vh]">
+    <div className="w-8 h-8 border-2 border-gold-500/30 border-t-gold-500 rounded-full animate-spin" />
+  </div>
+);
 
 function GlobalHeader() {
   const { lang, setLang } = useLanguage();
@@ -48,7 +57,11 @@ function MainLayout() {
   const { t } = useLanguage();
 
   if (!isAuthenticated) {
-    return <LoginFlow onLogin={() => setIsAuthenticated(true)} />;
+    return (
+      <Suspense fallback={<ViewLoading />}>
+        <LoginFlow onLogin={() => setIsAuthenticated(true)} />
+      </Suspense>
+    );
   }
 
   const renderContent = () => {
@@ -86,7 +99,9 @@ function MainLayout() {
               transition={{ duration: 0.3 }}
               className="h-full"
             >
-              {renderContent()}
+              <Suspense fallback={<ViewLoading />}>
+                {renderContent()}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </main>
