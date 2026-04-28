@@ -1,7 +1,10 @@
 import { createContext, useContext, useState } from 'react';
-import defaultAvatar from '../assets/default_profile.png';
-
 const AppDataContext = createContext();
+
+const EXTERNAL_ASSETS = {
+  default_profile: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80',
+  logo: 'https://images.unsplash.com/photo-1557180295-76eee20ae8aa?auto=format&fit=crop&q=80'
+};
 
 export function AppDataProvider({ children }) {
   // Global Navigation State
@@ -11,7 +14,7 @@ export function AppDataProvider({ children }) {
   // Global User Profile State
   const [userProfile, setUserProfile] = useState({
     name: 'Madame Kim',
-    avatar: defaultAvatar,
+    avatar: EXTERNAL_ASSETS.default_profile,
     level: 'Lv.1'
   });
 

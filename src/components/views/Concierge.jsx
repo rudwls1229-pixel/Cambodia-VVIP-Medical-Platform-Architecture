@@ -4,8 +4,8 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 
-// Default avatar
-import defaultAvatar from '../../assets/default_profile.png';
+// Default avatar (External URL for mobile compatibility)
+const defaultAvatar = 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80';
 
 export default function Concierge() {
   const { t } = useLanguage();

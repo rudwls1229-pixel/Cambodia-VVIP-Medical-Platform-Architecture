@@ -36,6 +36,21 @@
   }
 }
 
+/* Mobile Optimization */
+* {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Fix for iOS Safari "click" event issues on non-button elements */
+[onClick], [role="button"], button {
+  cursor: pointer;
+}
+
 /* Hide scrollbar for a cleaner mobile app feel */
 ::-webkit-scrollbar {
   display: none;
