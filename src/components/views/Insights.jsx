@@ -3,10 +3,10 @@ import { BookMarked, ChevronRight, GripVertical, ArrowLeft, Share2, Heart, Clock
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 
-// Premium assets (External URLs for mobile compatibility)
-const harmonyHero = 'https://images.unsplash.com/photo-1512290905903-0c71bd788283?auto=format&fit=crop&q=80';
-const exosomesHero = 'https://images.unsplash.com/photo-1576086213369-97a306d36557?auto=format&fit=crop&q=80';
-const recoveryHero = 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80';
+// Import premium generated assets
+import harmonyHero from '../../assets/harmony_hero.png';
+import exosomesHero from '../../assets/exosomes_hero.png';
+import recoveryHero from '../../assets/recovery_hero.png';
 
 function ParallaxArticle({ article, isFeatured, onClick }) {
   if (isFeatured) {
