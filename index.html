@@ -12,9 +12,18 @@
         return false;
       };
     </script>
-    <script src="https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.global.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/eruda"></script>
     <script>
-      if (!window.ResizeObserver) window.ResizeObserver = ResizeObserver;
+      eruda.init();
+      console.log("Eruda initialized. Engine booting...");
+      
+      // Handle iOS BFcache
+      window.addEventListener('pageshow', function(event) {
+        if (event.persisted) {
+          console.log("BFcache detected, reloading...");
+          window.location.reload();
+        }
+      });
     </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -29,7 +38,7 @@
       <div style="font-size:24px;letter-spacing:0.3em;margin-bottom:10px;">THE SEOUL PRIVATE</div>
       <div id="status-msg" style="font-size:12px;opacity:0.8;font-family:sans-serif;">SYSTEM STARTING...</div>
       <div id="debug-info" style="margin-top:30px;font-family:monospace;font-size:10px;opacity:0.6;color:#888;"></div>
-      <div style="margin-top:50px;font-size:9px;opacity:0.4;">VERSION: 1.2.5 (STABLE BASE)</div>
+      <div style="margin-top:50px;font-size:9px;opacity:0.4;">VERSION: 1.2.7 (DEBUG ENABLED)</div>
       <script>
         try {
           document.getElementById('debug-info').innerHTML = 'CHECKING ENGINE: OK<br>BROWSER: ' + navigator.userAgent.substring(0, 50) + '...';
