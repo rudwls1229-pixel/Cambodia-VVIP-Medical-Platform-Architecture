@@ -2,6 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <script>
+      // Global Error Catcher
+      window.onerror = function(msg, url, line, col, error) {
+        var errDiv = document.getElementById('debug-info');
+        if (errDiv) {
+          errDiv.innerHTML = '<div style="color:#ff4d4d;margin-top:20px;font-weight:bold;">CRASH DETECTED:</div>' + 
+                             '<div style="font-size:10px;margin-top:5px;word-break:break-all;">' + msg + '</div>' +
+                             '<div style="font-size:10px;">Line: ' + line + ' Col: ' + col + '</div>';
+        }
+        return false;
+      };
+    </script>
+    <script src="https://unpkg.com/resize-observer-polyfill@1.5.1/dist/ResizeObserver.global.js"></script>
+    <script>
+      if (!window.ResizeObserver) window.ResizeObserver = ResizeObserver;
+    </script>
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <title>THE SEOUL PRIVATE</title>
@@ -11,7 +27,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;500;600;700&family=Noto+Serif+Khmer:wght@400;500;600;700&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="background: #050505; color: #D4AF37; height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; padding: 40px; text-align: center;">
+        <div style="font-size: 24px; letter-spacing: 0.3em; margin-bottom: 20px;">THE SEOUL PRIVATE</div>
+        <div id="status-msg" style="font-size: 12px; opacity: 0.7; letter-spacing: 0.1em; font-family: sans-serif;">INITIALIZING SYSTEM...</div>
+        <div id="debug-info" style="margin-top: 40px; font-family: monospace; font-size: 10px; opacity: 0.5; color: #aaa;"></div>
+        <script>
+          // Basic capability check
+          try {
+            var test = Object.assign({}, {a:1});
+            document.getElementById('debug-info').innerHTML = 'SYSTEM CHECK: PASSED (V1.2.4)<br>WAITING FOR CORE ENGINE...';
+          } catch(e) {
+            document.getElementById('status-msg').innerHTML = 'BROWSER INCOMPATIBILITY DETECTED';
+            document.getElementById('debug-info').innerHTML = 'ERROR: MISSING MODERN JS SUPPORT';
+          }
+        </script>
+      </div>
+    </div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

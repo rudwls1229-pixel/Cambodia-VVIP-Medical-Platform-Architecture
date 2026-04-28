@@ -11,6 +11,8 @@ export default defineConfig({
     viteSingleFile(),
   ],
   build: {
+    target: 'es2020',
     emptyOutDir: false,
+    cssTarget: 'safari14'
   }
 })
