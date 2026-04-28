@@ -98,12 +98,6 @@ function MainLayout() {
 }
 
 export default function App() {
-  useState(() => {
-    // Immediate check to hide loader if JS executes perfectly
-    const loader = document.getElementById('boot-loader');
-    if (loader) loader.style.display = 'none';
-  });
-
   return (
     <AppDataProvider>
       <LanguageProvider>

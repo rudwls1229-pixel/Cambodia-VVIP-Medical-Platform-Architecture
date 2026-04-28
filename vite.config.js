@@ -11,9 +11,6 @@ export default defineConfig({
     viteSingleFile(),
   ],
   build: {
-    target: 'es2017',
-    minify: false,
     emptyOutDir: false,
-    cssTarget: 'safari13'
   }
 })
