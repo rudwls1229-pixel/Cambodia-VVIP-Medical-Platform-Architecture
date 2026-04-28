@@ -5,7 +5,7 @@ import legacy from '@vitejs/plugin-legacy'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: './',
+  base: '/Cambodia-VVIP-Medical-Platform-Architecture/',
   plugins: [
     react(),
     tailwindcss(),
