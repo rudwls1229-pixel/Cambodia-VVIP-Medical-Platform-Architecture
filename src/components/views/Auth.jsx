@@ -32,12 +32,16 @@ export default function Auth() {
     setIsLoading(true);
     setError("");
     
-    const result = await login(email, password);
-    if (!result.success) {
-      setError(result.error || "Login failed. Please check your credentials.");
+    try {
+      const result = await login(email, password);
+      if (!result.success) {
+        setError(`Access Denied: ${result.error}`);
+        setIsLoading(false);
+      }
+    } catch (e) {
+      setError(`Connection Error: ${e.message}`);
       setIsLoading(false);
     }
-    // Success is handled by AuthContext state change
   };
 
   const handleSignup = async (e) => {
