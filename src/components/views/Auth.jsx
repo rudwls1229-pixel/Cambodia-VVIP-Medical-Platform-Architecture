@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, ArrowRight, Send, AlertCircle } from 'lucide-react';
+import { Mail, Lock, User, ArrowRight, Send, AlertCircle, Check } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAuth } from '../../contexts/AuthContext';
 import logoImg from '../../assets/logo.png';
@@ -35,12 +35,22 @@ export default function Auth() {
   const [stage, setStage] = useState('intro'); // intro, login, signup
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
 
   // Refs for uncontrolled inputs (zero lag)
   const emailRef = useRef();
   const passwordRef = useRef();
   const nameRef = useRef();
   const confirmPasswordRef = useRef();
+
+  // Load Remembered Identity
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('vvip_remembered_email');
+    if (savedEmail && emailRef.current) {
+      emailRef.current.value = savedEmail;
+      setRememberMe(true);
+    }
+  }, [stage]);
 
   useEffect(() => {
     const timer = setTimeout(() => setStage('login'), 2500);
@@ -59,7 +69,13 @@ export default function Auth() {
     
     try {
       const result = await login(email, password);
-      if (!result.success) {
+      if (result.success) {
+        if (rememberMe) {
+          localStorage.setItem('vvip_remembered_email', email);
+        } else {
+          localStorage.removeItem('vvip_remembered_email');
+        }
+      } else {
         setError(`Access Denied: ${result.error}`);
         setIsLoading(false);
       }
@@ -130,8 +146,8 @@ export default function Auth() {
             exit={{ opacity: 0, scale: 1.05, filter: 'blur(10px)' }}
             className="text-center z-10"
           >
-            <div className="w-20 h-20 mx-auto mb-6">
-              <img src={logoImg} alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]" />
+            <div className="w-24 h-24 mx-auto mb-6">
+              <img src={logoImg} alt="Logo" className="w-full h-full object-contain drop-shadow-[0_0_20px_rgba(212,175,55,0.4)]" />
             </div>
             <h1 className="text-lg tracking-[0.4em] font-light text-gray-400 mb-1">THE SEOUL</h1>
             <h1 className="text-xl tracking-[0.4em] font-bold text-gold-500">PRIVATE</h1>
@@ -147,9 +163,9 @@ export default function Auth() {
           >
             <div className="mb-8 text-center">
               <motion.img 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 0.6 }}
-                src={logoImg} alt="Logo" className="w-10 h-10 mx-auto mb-4" 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1.2 }}
+                src={logoImg} alt="Logo" className="w-12 h-12 mx-auto mb-4 object-contain" 
               />
               <h2 className="text-xl font-serif text-gray-100 tracking-wide">
                 {stage === 'login' ? t('login_title') : t('signup_title')}
@@ -198,6 +214,21 @@ export default function Auth() {
                 />
               )}
 
+              {stage === 'login' && (
+                <div className="flex items-center gap-2 mb-6 ml-1">
+                  <button
+                    type="button"
+                    onClick={() => setRememberMe(!rememberMe)}
+                    className={`w-4 h-4 rounded border transition-all flex items-center justify-center ${
+                      rememberMe ? 'bg-gold-500 border-gold-500' : 'border-gold-500/30 bg-obsidian-800'
+                    }`}
+                  >
+                    {rememberMe && <Check className="w-3 h-3 text-obsidian-950" />}
+                  </button>
+                  <span className="text-[10px] text-gray-500 tracking-wider font-medium">{t('remember_me')}</span>
+                </div>
+              )}
+
               <button
                 type="submit"
                 disabled={isLoading}
@@ -241,8 +272,8 @@ export default function Auth() {
                   onClick={() => handleSocialAction('Facebook')}
                   className="group flex flex-col items-center gap-2.5"
                 >
-                  <div className="w-14 h-14 rounded-full border border-gold-500/10 bg-obsidian-800/30 flex items-center justify-center group-hover:border-gold-500/40 transition-all shadow-xl">
-                    <svg className="w-6 h-6 fill-gold-500" viewBox="0 0 24 24">
+                  <div className="w-14 h-14 rounded-full border border-gold-500/10 bg-[#1877F2]/10 flex items-center justify-center group-hover:border-[#1877F2]/40 transition-all shadow-xl">
+                    <svg className="w-7 h-7 fill-[#1877F2]" viewBox="0 0 24 24">
                       <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.469h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.469h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                     </svg>
                   </div>
@@ -253,8 +284,8 @@ export default function Auth() {
                   onClick={() => handleSocialAction('Telegram')}
                   className="group flex flex-col items-center gap-2.5"
                 >
-                  <div className="w-14 h-14 rounded-full border border-gold-500/10 bg-obsidian-800/30 flex items-center justify-center group-hover:border-gold-500/40 transition-all shadow-xl">
-                    <svg className="w-7 h-7 fill-gold-500 ml-0.5" viewBox="0 0 24 24">
+                  <div className="w-14 h-14 rounded-full border border-gold-500/10 bg-[#24A1DE]/10 flex items-center justify-center group-hover:border-[#24A1DE]/40 transition-all shadow-xl">
+                    <svg className="w-7 h-7 fill-[#24A1DE] ml-0.5" viewBox="0 0 24 24">
                       <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 00-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/>
                     </svg>
                   </div>
