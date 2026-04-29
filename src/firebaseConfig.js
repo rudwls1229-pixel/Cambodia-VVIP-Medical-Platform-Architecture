@@ -3,9 +3,9 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
-// Corrected Config from User's Prompt (Arux, V in ID, etc.)
+// 100% Copied from user prompt
 const firebaseConfig = {
-  apiKey: "AIzaSyAruxMetRQIVdlPwn6Wn08cym9aPLI0g28",
+  apiKey: "AIzaSyAruxMetRQIVdlPwn6Wn08cym9aPLI0g28", // 'z'가 아니라 'r'이다!
   authDomain: "cambodia-vvip-medical-platform.firebaseapp.com",
   projectId: "cambodia-vvip-medical-platform",
   storageBucket: "cambodia-vvip-medical-platform.firebasestorage.app",
@@ -19,7 +19,7 @@ let app;
 try {
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
-    console.log("[Firebase] Successfully Initialized v1.6.4");
+    console.log("[Firebase] Successfully Initialized v1.6.5");
   } else {
     app = getApp();
   }
