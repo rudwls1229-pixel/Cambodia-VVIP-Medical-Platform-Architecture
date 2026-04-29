@@ -9,9 +9,13 @@ import VirtualTryOn from './VirtualTryOn';
 // Assets
 import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
 
+import { useAuth } from '../../contexts/AuthContext';
+import { LogOut } from 'lucide-react';
+
 export default function Home() {
   const { t } = useLanguage();
-  const { schedule, setActiveTab, setActiveFilter, userProfile } = useAppData();
+  const { schedule, setActiveTab, setActiveFilter } = useAppData();
+  const { user, userProfile, logout } = useAuth();
   
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -67,16 +71,27 @@ export default function Home() {
     <div className="pt-24 px-6">
       <header className="mb-8 flex justify-between items-end">
         <div>
-          <h2 className="text-gray-400 text-sm tracking-widest mb-1">{t('welcome_back')}</h2>
-          <h1 className="text-2xl font-serif text-gray-100">{userProfile.name}</h1>
+          <h2 className="text-gray-400 text-xs tracking-[0.2em] mb-1 uppercase font-bold">{t('welcome_back')}</h2>
+          <h1 className="text-2xl font-serif text-gray-100">
+            {userProfile?.name || user?.email?.split('@')[0] || 'VVIP Member'}
+          </h1>
         </div>
-        <button 
-          onClick={() => setActiveTab('concierge')}
-          className="w-10 h-10 rounded-full bg-obsidian-700 border border-gold-500/30 overflow-hidden relative group"
-        >
-          <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-          <div className="absolute inset-0 bg-gold-500/20 mix-blend-overlay group-hover:bg-transparent transition-colors" />
-        </button>
+        <div className="flex gap-3">
+          <button 
+            onClick={() => logout()}
+            className="w-10 h-10 rounded-full bg-obsidian-800 border border-red-500/20 flex items-center justify-center text-red-500/70 hover:bg-red-500/10 transition-colors"
+          >
+            <LogOut className="w-4 h-4" />
+          </button>
+          <button 
+            onClick={() => setActiveTab('circle')}
+            className="w-10 h-10 rounded-full bg-obsidian-700 border border-gold-500/30 overflow-hidden relative group"
+          >
+            <div className="w-full h-full bg-gold-500/20 flex items-center justify-center text-gold-500 font-bold text-xs">
+              {userProfile?.name?.[0] || 'V'}
+            </div>
+          </button>
+        </div>
       </header>
 
       {/* AI Personal Concierge Banner */}

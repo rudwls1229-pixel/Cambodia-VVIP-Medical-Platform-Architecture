@@ -53,14 +53,13 @@ function GlobalHeader() {
 }
 
 function MainLayout() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const { activeTab, setActiveTab } = useAppData();
-  const { t } = useLanguage();
+  const { user } = useAuth();
 
-  if (!isAuthenticated) {
+  if (!user) {
     return (
       <Suspense fallback={<ViewLoading />}>
-        <Auth onLogin={() => setIsAuthenticated(true)} />
+        <Auth />
       </Suspense>
     );
   }
