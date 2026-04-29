@@ -33,9 +33,7 @@ async function deploy() {
           content = content.replace(/<script type="module">import'data:text\/javascript,if\(!import\.meta\.resolve\)throw Error\("import\.meta\.resolve not supported"\)';.*?window\.__vite_is_modern_browser=true<\/script>/g, 
             '<script type="module">window.__vite_is_modern_browser=true</script>');
           
-          // Fix favicon 404
-          content = content.replace(/href="\/Cambodia-VVIP-Medical-Platform-Architecture\/vite\.svg"/g, 
-            'href="https://rudwls1229-pixel.github.io/Cambodia-VVIP-Medical-Platform-Architecture/vite.svg"');
+          // No absolute path replacements needed for relative base build
 
           fs.writeFileSync(destPath, content);
           console.log('iPhone Black Screen fix applied to index.html');

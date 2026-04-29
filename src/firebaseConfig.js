@@ -19,7 +19,7 @@ let app;
 try {
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
-    console.log("[Firebase] Successfully Initialized v1.6.5");
+    console.log("[Firebase] Successfully Initialized v1.7.5");
   } else {
     app = getApp();
   }
