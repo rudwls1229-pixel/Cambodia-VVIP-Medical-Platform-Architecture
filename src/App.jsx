@@ -3,6 +3,7 @@ import Navigation from './components/Navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AppDataProvider, useAppData } from './contexts/AppDataContext';
+import { useAuth } from './contexts/AuthContext';
 
 // Lazy load views for better performance and mobile compatibility
 const Auth = lazy(() => import('./components/views/Auth'));
