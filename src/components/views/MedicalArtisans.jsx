@@ -250,7 +250,7 @@ export default function MedicalArtisans() {
             </div>
 
             {/* Clinic Info Body */}
-            <div className="px-6 -mt-16 relative z-10 space-y-8 pb-32">
+            <div className="px-6 -mt-16 relative z-10 space-y-8 pb-48">
               <div className="bg-obsidian-800/80 border border-white/5 backdrop-blur-xl rounded-3xl p-6 shadow-2xl">
                 <h1 className="text-2xl font-serif text-white mb-2">{selectedClinic.title}</h1>
                 <div className="flex items-center gap-3 mb-6">
@@ -332,11 +332,11 @@ export default function MedicalArtisans() {
               </section>
             </div>
 
-            {/* Sticky Bottom Bar */}
-            <div className="fixed bottom-0 left-0 right-0 p-6 bg-obsidian-900/90 backdrop-blur-xl border-t border-gold-500/20 z-[60]">
+            {/* Sticky Bottom Bar - Positioned above Navigation (approx 72px) */}
+            <div className="fixed bottom-[72px] left-0 right-0 p-4 bg-obsidian-900/95 backdrop-blur-xl border-t border-gold-500/10 z-[60] shadow-[0_-15px_40px_rgba(0,0,0,0.6)]">
               <button 
                 onClick={() => setWizardArtisan({ name: selectedClinic.clinicName })}
-                className="w-full bg-gold-500 text-obsidian-900 font-serif text-lg py-4 rounded-xl shadow-[0_0_30px_rgba(212,175,55,0.3)] active:scale-95 transition-all"
+                className="w-full bg-gold-500 text-obsidian-900 font-serif text-lg py-4 rounded-xl shadow-[0_0_30px_rgba(212,175,55,0.25)] active:scale-95 transition-all"
               >
                 {t('reserve_now')}
               </button>
