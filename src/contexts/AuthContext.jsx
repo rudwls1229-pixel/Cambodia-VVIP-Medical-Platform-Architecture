@@ -31,18 +31,27 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
-      setUser(currentUser);
-      if (currentUser) {
-        // Fetch user profile from Firestore
-        const docRef = doc(db, "users", currentUser.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setUserProfile(docSnap.data());
+      try {
+        setUser(currentUser);
+        if (currentUser) {
+          // Robust Profile Fetching (prevents black screen if Firestore is not enabled)
+          try {
+            const docRef = doc(db, "users", currentUser.uid);
+            const docSnap = await getDoc(docRef);
+            if (docSnap.exists()) {
+              setUserProfile(docSnap.data());
+            }
+          } catch (dbError) {
+            console.warn("[Firebase] Firestore is not enabled or reachable. App will continue with limited profile data.", dbError);
+          }
+        } else {
+          setUserProfile(null);
         }
-      } else {
-        setUserProfile(null);
+      } catch (authError) {
+        console.error("[Auth] Status change error:", authError);
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     });
 
     return unsubscribe;
