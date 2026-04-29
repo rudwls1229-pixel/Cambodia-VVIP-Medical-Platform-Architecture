@@ -154,7 +154,13 @@ export default function MedicalArtisans() {
               {categories.map((cat) => (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveFilter(cat.id)}
+                  onClick={() => {
+                    if (cat.id === 'cat_other') {
+                      setActiveTab('diagnosis');
+                    } else {
+                      setActiveFilter(cat.id);
+                    }
+                  }}
                   className={`whitespace-nowrap px-4 py-2 rounded-full text-xs transition-colors border ${
                     activeFilter === cat.id 
                       ? 'bg-gold-500/10 border-gold-500 text-gold-500 font-medium' 

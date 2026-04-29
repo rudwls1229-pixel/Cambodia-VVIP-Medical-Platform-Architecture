@@ -5,12 +5,13 @@ import { LanguageProvider, useLanguage } from './contexts/LanguageContext';
 import { AppDataProvider, useAppData } from './contexts/AppDataContext';
 
 // Lazy load views for better performance and mobile compatibility
-const LoginFlow = lazy(() => import('./components/views/LoginFlow'));
+const Auth = lazy(() => import('./components/views/Auth'));
 const Home = lazy(() => import('./components/views/Home'));
 const Insights = lazy(() => import('./components/views/Insights'));
 const PrivateCircle = lazy(() => import('./components/views/PrivateCircle'));
 const MedicalArtisans = lazy(() => import('./components/views/MedicalArtisans'));
 const Concierge = lazy(() => import('./components/views/Concierge'));
+const Diagnosis = lazy(() => import('./components/views/Diagnosis'));
 
 // Loading fallback component
 const ViewLoading = () => (
@@ -59,7 +60,7 @@ function MainLayout() {
   if (!isAuthenticated) {
     return (
       <Suspense fallback={<ViewLoading />}>
-        <LoginFlow onLogin={() => setIsAuthenticated(true)} />
+        <Auth onLogin={() => setIsAuthenticated(true)} />
       </Suspense>
     );
   }
@@ -76,6 +77,8 @@ function MainLayout() {
         return <MedicalArtisans />;
       case 'concierge':
         return <Concierge />;
+      case 'diagnosis':
+        return <Diagnosis />;
       default:
         return <Home />;
     }
