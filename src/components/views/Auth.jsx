@@ -6,6 +6,28 @@ import { useAuth } from '../../contexts/AuthContext';
 import logoImg from '../../assets/logo.png';
 import pkg from '../../../package.json';
 
+// Moved outside to prevent re-creation on every keystroke
+const InputField = ({ icon: Icon, type, placeholder, label, value, onChange }) => (
+  <div className="w-full mb-5">
+    <label className="block text-[9px] tracking-[0.2em] text-gold-500/60 uppercase mb-2 ml-1 font-bold">
+      {label}
+    </label>
+    <div className="relative group">
+      <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+        <Icon className="h-4 w-4 text-gold-500/40 group-focus-within:text-gold-500 transition-colors" />
+      </div>
+      <input
+        required
+        type={type}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="block w-full pl-11 pr-4 py-3.5 bg-obsidian-800/40 border border-gold-500/20 rounded-xl text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500/60 focus:ring-1 focus:ring-gold-500/10 transition-all text-base"
+        placeholder={placeholder}
+      />
+    </div>
+  </div>
+);
+
 export default function Auth() {
   const { t, setLang, lang } = useLanguage();
   const { login, signup, socialLogin } = useAuth();
@@ -68,27 +90,6 @@ export default function Auth() {
       setIsLoading(false);
     }
   };
-
-  const InputField = ({ icon: Icon, type, placeholder, label, value, onChange }) => (
-    <div className="w-full mb-5">
-      <label className="block text-[9px] tracking-[0.2em] text-gold-500/60 uppercase mb-2 ml-1 font-bold">
-        {label}
-      </label>
-      <div className="relative group">
-        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-          <Icon className="h-4 w-4 text-gold-500/40 group-focus-within:text-gold-500 transition-colors" />
-        </div>
-        <input
-          required
-          type={type}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className="block w-full pl-11 pr-4 py-3.5 bg-obsidian-800/40 border border-gold-500/20 rounded-xl text-gray-100 placeholder-gray-600 focus:outline-none focus:border-gold-500/60 focus:ring-1 focus:ring-gold-500/10 transition-all text-base"
-          placeholder={placeholder}
-        />
-      </div>
-    </div>
-  );
 
   return (
     <div className="min-h-screen bg-obsidian-900 w-full max-w-md mx-auto relative flex flex-col items-center justify-center overflow-hidden px-8">
