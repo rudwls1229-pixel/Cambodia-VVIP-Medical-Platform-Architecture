@@ -3,15 +3,15 @@ import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getAnalytics } from "firebase/analytics";
 
-// Exact Config from user's screenshot
+// Corrected Config from User's Prompt (Arux, V in ID, etc.)
 const firebaseConfig = {
-  apiKey: "AIzaSyAzuxMetRQIvdlPwndNm80cym9aPLI0g28",
+  apiKey: "AIzaSyAruxMetRQIVdlPwn6Wn08cym9aPLI0g28",
   authDomain: "cambodia-vvip-medical-platform.firebaseapp.com",
   projectId: "cambodia-vvip-medical-platform",
   storageBucket: "cambodia-vvip-medical-platform.firebasestorage.app",
   messagingSenderId: "921402304388",
-  appId: "1:921402304388:web:eb42ac62b8b9089c3e5fd1",
-  measurementId: "G-NPZYT85XGY"
+  appId: "1:921402304388:web:eb42ac62b0b9089c3e5fd1",
+  measurementId: "G-NPZVT85XGY"
 };
 
 // Robust Initialization
@@ -19,7 +19,7 @@ let app;
 try {
   if (!getApps().length) {
     app = initializeApp(firebaseConfig);
-    console.log("[Firebase] Successfully Initialized v1.6.3");
+    console.log("[Firebase] Successfully Initialized v1.6.4");
   } else {
     app = getApp();
   }
