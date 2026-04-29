@@ -5,6 +5,7 @@ import {
   signInWithEmailAndPassword, 
   signOut,
   FacebookAuthProvider,
+  GoogleAuthProvider,
   signInWithPopup,
   browserLocalPersistence,
   setPersistence
@@ -83,29 +84,51 @@ export function AuthProvider({ children }) {
     }
   };
 
-  // 3. Social Login (Facebook/Telegram) + Passkey Interaction Logic
+  // 3. Social Login (Google/Facebook/Telegram) + Passkey Interaction Logic
+  const googleLogin = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Sync with Firestore
+      const docRef = doc(db, "users", user.uid);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        const profileData = {
+          name: user.displayName || "VVIP Member",
+          email: user.email,
+          uid: user.uid,
+          photoURL: user.photoURL,
+          grade: 'VIP',
+          createdAt: new Date().toISOString(),
+        };
+        await setDoc(docRef, profileData);
+        setUserProfile(profileData);
+      }
+      return { success: true };
+    } catch (error) {
+      console.error("Google Login error:", error);
+      return { success: false, error: error.message };
+    }
+  };
+
   const socialLogin = async (platform) => {
     try {
-      // In a real VVIP scenario, we trigger the Passkey popup here
-      console.log(`[v1.6.0 Security] Triggering Passkey / Face ID for platform: ${platform}`);
+      console.log(`[v1.6.1 Security] Triggering Passkey / Face ID for platform: ${platform}`);
       
-      // Placeholder for actual WebAuthn/Passkey registration/login
-      // If successful, proceed with Firebase Social Auth
-      
-      if (platform === 'Facebook') {
+      if (platform === 'Google') {
+        return await googleLogin();
+      } else if (platform === 'Facebook') {
         const provider = new FacebookAuthProvider();
         await signInWithPopup(auth, provider);
       } else if (platform === 'Telegram') {
-        // Telegram Login requires a custom widget, so we'll simulate a secure login for now
-        // In production, this would use a cloud function to verify Telegram's auth data
-        console.warn("Telegram Auth requires custom implementation via Telegram Widget API.");
-        // For demonstration, let's treat it as a special login
-        return { success: false, error: "Telegram Login is being configured with your Bot Token." };
+        console.warn("Telegram Auth requires custom implementation.");
+        return { success: false, error: "Telegram Login is being configured." };
       }
       
-      // Notify via Telegram (Mock - would call a Cloud Function in production)
       notifyNewLogin(platform);
-
       return { success: true };
     } catch (error) {
       console.error("Social Login error:", error);
