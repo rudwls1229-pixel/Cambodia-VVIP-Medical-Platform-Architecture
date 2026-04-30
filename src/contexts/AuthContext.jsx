@@ -21,7 +21,12 @@ export function useAuth() {
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null);
+  const [userProfile, setUserProfile] = useState({
+    name: 'Madame Kim',
+    avatar: null,
+    level: 'Lv.1',
+    grade: 'VIP'
+  });
   const [loading, setLoading] = useState(true);
 
   // Set persistence to local (keeps user logged in across browser sessions)
@@ -158,6 +163,7 @@ export function AuthProvider({ children }) {
   const value = {
     user,
     userProfile,
+    setUserProfile,
     signup,
     login,
     socialLogin,

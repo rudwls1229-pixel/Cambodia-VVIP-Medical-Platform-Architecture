@@ -3,6 +3,7 @@ import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, Che
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Default avatar
 import defaultAvatar from '../../assets/default_profile.png';
@@ -10,14 +11,17 @@ import defaultAvatar from '../../assets/default_profile.png';
 export default function Concierge() {
   const { t } = useLanguage();
   const { 
-    schedule, userProfile, setUserProfile, toggleFlightTicket, 
+    schedule, toggleFlightTicket, 
     activeMyPageView, setActiveMyPageView, 
     flightNoticeTrigger, setFlightNoticeTrigger,
     updateBookingStatus
   } = useAppData();
+  const { userProfile, setUserProfile } = useAuth();
   
   const [showUpload, setShowUpload] = useState(false);
+  const [showDetails, setShowDetails] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   
   const fileInputRef = useRef(null);
 
@@ -211,17 +215,23 @@ export default function Concierge() {
 
             <div className="space-y-6">
               {confirmedBookings.length > 0 ? (
-                confirmedBookings.map((booking, index) => (
                   <motion.div 
                     key={booking.id}
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="bg-obsidian-800/60 border border-white/5 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden group"
+                    onClick={() => {
+                      setSelectedBooking(booking);
+                      setShowDetails(true);
+                    }}
+                    className="bg-obsidian-800/60 border border-white/5 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden group cursor-pointer active:scale-[0.98] transition-all"
                   >
                     <div className="absolute top-0 right-0 p-3">
                       <StatusBadge 
                         statusKey={booking.statusLabel || 'st_pending'} 
-                        onClick={() => cycleStatus(booking.id, booking.statusLabel || 'st_pending')}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          cycleStatus(booking.id, booking.statusLabel || 'st_pending');
+                        }}
                       />
                     </div>
 
@@ -238,29 +248,28 @@ export default function Concierge() {
                       </div>
                     </div>
 
-                    <div className="bg-obsidian-900/50 rounded-xl p-5 border border-white/5">
-                      <div className="flex justify-between items-center mb-4">
-                        <div>
-                          <h4 className="text-sm font-medium text-gray-200">{t('flight_upload_title')}</h4>
-                          <p className="text-[10px] text-gray-500 mt-0.5">{t('flight_upload_sub')}</p>
-                        </div>
-                        {!booking.isUploaded ? (
-                          <button 
-                            onClick={() => {
-                              setSelectedBookingId(booking.id);
-                              setShowUpload(true);
-                            }} 
-                            className="w-10 h-10 rounded-full bg-gold-500 flex items-center justify-center text-obsidian-900 shadow-[0_0_15px_rgba(212,175,55,0.3)] hover:scale-110 transition-transform"
-                          >
-                            <Plus size={20} />
-                          </button>
-                        ) : (
-                          <div className="flex items-center gap-2 text-gold-500">
-                            <FileText size={20} />
-                            <span className="text-xs font-bold uppercase tracking-tighter">Uploaded</span>
-                          </div>
-                        )}
+                    <div className="bg-obsidian-900/50 rounded-xl p-5 border border-white/5 flex justify-between items-center">
+                      <div>
+                        <h4 className="text-sm font-medium text-gray-200">{t('flight_upload_title')}</h4>
+                        <p className="text-[10px] text-gray-500 mt-0.5">{t('flight_upload_sub')}</p>
                       </div>
+                      {booking.isUploaded ? (
+                        <div className="flex items-center gap-2 text-gold-500">
+                          <FileText size={18} />
+                          <span className="text-[10px] font-bold uppercase tracking-tighter">Uploaded</span>
+                        </div>
+                      ) : (
+                        <button 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedBookingId(booking.id);
+                            setShowUpload(true);
+                          }} 
+                          className="w-8 h-8 rounded-full bg-gold-500 flex items-center justify-center text-obsidian-900 shadow-lg"
+                        >
+                          <Plus size={16} />
+                        </button>
+                      )}
                     </div>
                   </motion.div>
                 ))
@@ -337,32 +346,75 @@ export default function Concierge() {
         )}
       </AnimatePresence>
 
-      {/* Upload Modal / Flight Ticket Notice */}
-      <AnimatePresence>
-        {showUpload && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm bg-obsidian-800 border border-gold-500/30 rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
-              <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold-500/20 shadow-inner">
-                <Plane size={40} className="text-gold-500" />
+        {showDetails && selectedBooking && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-2xl flex items-end sm:items-center justify-center">
+            <motion.div 
+              initial={{ y: "100%" }} 
+              animate={{ y: 0 }} 
+              exit={{ y: "100%" }}
+              className="w-full max-w-md bg-obsidian-900 border-t sm:border border-gold-500/20 rounded-t-[3rem] sm:rounded-[3rem] p-8 pb-12"
+            >
+              <div className="flex justify-between items-start mb-8">
+                <div>
+                  <h2 className="text-2xl font-serif text-white mb-1">{t('booking_details')}</h2>
+                  <p className="text-xs text-gold-500 tracking-widest uppercase font-bold">{t(selectedBooking.type)}</p>
+                </div>
+                <button onClick={() => setShowDetails(false)} className="p-2 bg-white/5 rounded-full text-gray-400">
+                  <X size={24} />
+                </button>
               </div>
-              <h2 className="text-2xl font-serif text-gold-500 mb-2">{t('flight_upload_title')}</h2>
-              <p className="text-xs text-gray-400 mb-8 italic">{t('msg_upload_flight')}</p>
-              
-              <div 
-                onClick={() => {
-                  if (selectedBookingId) {
-                    toggleFlightTicket(selectedBookingId);
-                  }
-                  setShowUpload(false);
-                }} 
-                className="border-2 border-dashed border-gold-500/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-all group bg-gold-500/5"
+
+              <div className="space-y-8">
+                <div className="bg-obsidian-800/50 rounded-3xl p-6 border border-white/5">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className="w-12 h-12 rounded-2xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20">
+                      <Calendar size={24} className="text-gold-500" />
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-gray-200">{t(selectedBooking.detail)}</h4>
+                      <p className="text-xs text-gray-500 mt-1">{selectedBooking.time}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="pt-6 border-t border-white/5">
+                    <h5 className="text-[10px] text-gray-500 uppercase tracking-widest font-bold mb-4">{t('status_timeline')}</h5>
+                    <div className="space-y-6 relative">
+                      <div className="absolute left-[7px] top-2 bottom-2 w-0.5 bg-white/5" />
+                      
+                      {[
+                        { label: 'st_pending', time: '05/01 10:23 AM', done: true },
+                        { label: 'st_reviewing', time: '05/01 11:45 AM', done: selectedBooking.statusLabel !== 'st_pending' },
+                        { label: 'st_approved', time: 'TBD', done: selectedBooking.statusLabel === 'st_approved' }
+                      ].map((step, i) => (
+                        <div key={i} className="flex items-center gap-4 relative z-10">
+                          <div className={`w-4 h-4 rounded-full border-2 ${step.done ? 'bg-gold-500 border-gold-500' : 'bg-obsidian-900 border-white/20'}`} />
+                          <div className="flex-1 flex justify-between items-center">
+                            <span className={`text-xs ${step.done ? 'text-gray-200' : 'text-gray-600'}`}>{t(step.label)}</span>
+                            <span className="text-[10px] text-gray-600 font-mono">{step.time}</span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-obsidian-800/30 p-4 rounded-2xl border border-white/5">
+                    <p className="text-[10px] text-gray-500 uppercase mb-1 tracking-widest">Location</p>
+                    <p className="text-xs text-gray-300">Gangnam-gu, Seoul</p>
+                  </div>
+                  <div className="bg-obsidian-800/30 p-4 rounded-2xl border border-white/5">
+                    <p className="text-[10px] text-gray-500 uppercase mb-1 tracking-widest">Concierge</p>
+                    <p className="text-xs text-gray-300">Premium Butler Service</p>
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={() => setShowDetails(false)}
+                className="w-full mt-10 py-4 bg-gold-500 text-obsidian-900 rounded-2xl font-bold tracking-[0.2em] text-[11px] uppercase shadow-xl"
               >
-                <Upload className="w-8 h-8 text-gold-500/40 mx-auto group-hover:text-gold-500 transition-colors" />
-                <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest font-bold">Tap to Upload</p>
-              </div>
-              
-              <button onClick={() => setShowUpload(false)} className="w-full py-4 text-gray-500 hover:text-white transition-colors uppercase text-[10px] tracking-[0.3em] font-bold">
-                {t('pol_edit')}
+                Close Details
               </button>
             </motion.div>
           </motion.div>

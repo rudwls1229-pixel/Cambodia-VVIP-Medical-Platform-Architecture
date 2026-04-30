@@ -1,251 +1,211 @@
 import { useState, useRef, useEffect } from 'react';
-import { Headset, ArrowRight, MapPin, X, Send, Mic, Sparkles, Plane } from 'lucide-react';
+import { 
+  Search, Bell, MessageCircle, Heart, Sparkles, 
+  ArrowRight, ChevronRight, Mic, Send, X, 
+  Headset, Plane, Star
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
-import MedicalPassport from './MedicalPassport';
-import VirtualTryOn from './VirtualTryOn';
+import { useAuth } from '../../contexts/AuthContext';
 
 // Assets
 import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
-
-import { useAuth } from '../../contexts/AuthContext';
-import { LogOut } from 'lucide-react';
+import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Home() {
   const { t } = useLanguage();
-  const { schedule, setActiveTab, setActiveFilter } = useAppData();
-  const { user, userProfile, logout } = useAuth();
+  const { setActiveTab, setActiveFilter } = useAppData();
+  const { userProfile } = useAuth();
   
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState('');
   const [isListening, setIsListening] = useState(false);
-  
-  const [showPassport, setShowPassport] = useState(false);
-  const [showTryOn, setShowTryOn] = useState(false);
-  
-  const chatEndRef = useRef(null);
+  const [scrolled, setScrolled] = useState(false);
 
-  const services = [
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 20);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const categories = [
+    { id: 'skin', name: t('cat_skin'), icon: '✨' },
+    { id: 'facial', name: t('cat_facial'), icon: '🎭' },
+    { id: 'body', name: t('cat_body'), icon: '🧘' },
+    { id: 'filler', name: t('cat_filler'), icon: '💉' },
+    { id: 'anti-aging', name: t('cat_anti_aging'), icon: '⏳' },
     { id: 'dental', name: t('cat_dental'), icon: '🦷' },
     { id: 'eye', name: t('cat_eye'), icon: '👁️' },
-    { id: 'derma', name: t('cat_derma'), icon: '✨' },
-    { id: 'plastic', name: t('cat_plastic'), icon: '🎭' },
+    { id: 'derma', name: t('cat_derma'), icon: '🧴' },
+    { id: 'plastic', name: t('cat_plastic'), icon: '✂️' },
     { id: 'other', name: t('cat_other'), icon: '➕' },
   ];
 
-  // Initialize chatbot
-  useEffect(() => {
-    if (showChat && messages.length === 0) {
-      setTimeout(() => {
-        setMessages([{ sender: 'ai', text: t('ai_msg') }]);
-      }, 500);
+  const tips = [
+    {
+      id: 1,
+      title: t('unni_tip_1'),
+      image: "https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80",
+      tag: "Trending"
+    },
+    {
+      id: 2,
+      title: t('unni_tip_2'),
+      image: signatureLiftingHero,
+      tag: "Expert"
     }
-  }, [showChat, messages.length, t]);
-
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  ];
 
   const handleSendMessage = (text = inputText) => {
     if (!text.trim()) return;
     setMessages(prev => [...prev, { sender: 'user', text }]);
     setInputText('');
-    
-    // Simulate AI response
     setTimeout(() => {
       setMessages(prev => [...prev, { sender: 'ai', text: t('chat_reply') }]);
     }, 1500);
   };
 
-  const handleMicClick = () => {
-    setIsListening(true);
-    setTimeout(() => {
-      setIsListening(false);
-      handleSendMessage("I need a Maybach pickup from Incheon tomorrow.");
-    }, 3000);
-  };
-
   return (
-    <div className="pt-24 px-6">
-      <header className="mb-8 flex justify-between items-end">
-        <div>
-          <h2 className="text-gray-400 text-xs tracking-[0.2em] mb-1 uppercase font-bold">{t('welcome_back')}</h2>
-          <h1 className="text-2xl font-serif text-gray-100">
-            {userProfile?.name || user?.email?.split('@')[0] || 'VVIP Member'}
-          </h1>
-        </div>
-        <div className="flex gap-3">
-          <button 
-            onClick={() => logout()}
-            className="w-10 h-10 rounded-full bg-obsidian-800 border border-red-500/20 flex items-center justify-center text-red-500/70 hover:bg-red-500/10 transition-colors"
-          >
-            <LogOut className="w-4 h-4" />
-          </button>
+    <div className="min-h-screen bg-obsidian-900 pb-32">
+      {/* Search Header (Gangnam Unni style) */}
+      <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 py-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
+        <div className="flex items-center gap-4">
+          <div className="flex-1 relative">
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <input 
+              type="text" 
+              placeholder={t('search_placeholder')}
+              className="w-full bg-obsidian-800/80 border border-white/10 rounded-full py-2.5 pl-11 pr-4 text-xs text-white focus:outline-none focus:border-gold-500/50 transition-all shadow-inner"
+            />
+          </div>
           <button 
             onClick={() => setActiveTab('concierge')}
-            className="w-10 h-10 rounded-full bg-obsidian-700 border border-gold-500/30 overflow-hidden relative group"
+            className="w-9 h-9 rounded-full border border-gold-500/30 overflow-hidden shrink-0"
           >
-            {userProfile?.avatar ? (
-              <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gold-500/20 flex items-center justify-center text-gold-500 font-bold text-xs uppercase">
-                {userProfile?.name?.[0] || 'V'}
-              </div>
-            )}
+            <img src={userProfile?.avatar || defaultAvatar} className="w-full h-full object-cover" alt="Profile" />
           </button>
         </div>
       </header>
 
-      {/* AI Personal Concierge Banner */}
-      <motion.div 
-        onClick={() => setShowChat(true)}
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-obsidian-800 to-obsidian-900 border border-gold-500/20 p-6 mb-8 group cursor-pointer"
-      >
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gold-500/5 rounded-full blur-[40px]" />
-        
-        <div className="relative z-10 flex items-start gap-4">
-          <div className="w-12 h-12 rounded-full bg-gold-500/10 flex items-center justify-center shrink-0 border border-gold-500/30">
-            <Headset className="text-gold-500 w-5 h-5" />
-          </div>
-          <div>
-            <h3 className="font-serif text-lg text-gold-500 mb-1">{t('ai_concierge')}</h3>
-            <p className="text-sm text-gray-400 leading-relaxed mb-4 line-clamp-2">
-              {t('ai_msg')}
-            </p>
-            <div className="flex items-center gap-2 text-xs tracking-widest text-gray-300 group-hover:text-gold-500 transition-colors uppercase border-b border-transparent group-hover:border-gold-500 pb-1 w-fit">
-              {t('start_conv')} <ArrowRight className="w-3 h-3" />
-            </div>
+      <div className="pt-24 px-6">
+        {/* Main Banner Slider (Simulation) */}
+        <div className="relative h-48 rounded-3xl overflow-hidden mb-8 group">
+          <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950 to-transparent z-10" />
+          <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80" className="absolute inset-0 w-full h-full object-cover opacity-60" alt="Banner" />
+          <div className="absolute inset-0 z-20 p-8 flex flex-col justify-center">
+            <span className="text-gold-500 text-[10px] font-bold uppercase tracking-widest mb-2">Member Special</span>
+            <h2 className="text-2xl font-serif text-white mb-4 leading-tight">Premium Medical<br/>Curation for VVIP</h2>
+            <button className="bg-gold-500 text-obsidian-900 px-4 py-2 rounded-lg text-[10px] font-bold w-fit uppercase tracking-wider shadow-lg">Explore Now</button>
           </div>
         </div>
-      </motion.div>
 
-      {/* Luxury Category Grid */}
-      <section className="mb-8">
-        <h3 className="font-serif tracking-wide text-lg mb-4">{t('services')}</h3>
-        <div className="grid grid-cols-5 gap-2">
-          {services.map((service) => (
-            <div 
-              key={service.id} 
-              onClick={() => {
-                setActiveFilter(service.id === 'other' ? 'cat_all' : service.id);
-                setActiveTab('artisans');
-              }}
-              className="flex flex-col items-center gap-2 group cursor-pointer"
-            >
-              <div className="w-14 h-14 rounded-xl bg-obsidian-800 border border-white/5 flex items-center justify-center text-xl group-hover:border-gold-500/50 group-hover:bg-gold-500/10 transition-all">
-                {service.icon}
-              </div>
-              <span className="text-[9px] text-gray-400 text-center tracking-wider">{service.name}</span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Vertical Journey Itinerary */}
-      <section className="mb-8">
-        <h3 className="font-serif tracking-wide text-lg mb-6">{t('schedule')}</h3>
-        
-        <div className="relative space-y-6">
-          {/* The Vertical Connecting Line */}
-          <div className="absolute top-2 bottom-0 left-[9px] w-0.5 bg-gradient-to-b from-gold-500 via-gold-500/30 to-transparent"></div>
-
-          <AnimatePresence>
-            {schedule.map((item, i) => (
-              <motion.div 
-                key={item.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: i * 0.1 }}
-                className="relative flex items-start group pl-10"
+        {/* Category Grid (Gangnam Unni style) */}
+        <section className="mb-10">
+          <div className="grid grid-cols-5 gap-y-6">
+            {categories.map((cat) => (
+              <button 
+                key={cat.id} 
+                onClick={() => {
+                  setActiveFilter(cat.id === 'other' ? 'cat_all' : cat.id);
+                  setActiveTab('artisans');
+                }}
+                className="flex flex-col items-center gap-2.5 group"
               >
-                {/* Timeline Dot */}
-                <div className={`absolute left-0 top-0.5 w-5 h-5 rounded-full flex items-center justify-center ring-4 ring-obsidian-900 z-10 ${
-                  item.status === 'completed' ? 'bg-gold-500' : 
-                  item.status === 'current' ? 'bg-obsidian-800 border-2 border-gold-500' : 
-                  'bg-obsidian-800 border-2 border-white/20'
-                }`}>
-                  {item.status === 'current' && (
-                    <motion.div animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }} transition={{ duration: 1.5, repeat: Infinity }} className="absolute inset-0 rounded-full border border-gold-500/50" />
-                  )}
-                  {item.status === 'completed' && <div className="w-1.5 h-1.5 bg-obsidian-900 rounded-full" />}
+                <div className="w-14 h-14 rounded-2xl bg-obsidian-800/50 border border-white/5 flex items-center justify-center text-2xl group-hover:bg-gold-500/10 group-hover:border-gold-500/30 transition-all shadow-lg">
+                  {cat.icon}
                 </div>
-                
-                  {/* Timeline Content */}
-                  <div className={`flex-1 min-w-0 ${item.status === 'upcoming' ? 'opacity-50' : ''}`}>
-                    <div className="flex justify-between items-baseline mb-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className={`font-medium text-sm truncate pr-2 ${item.status === 'current' ? 'text-gold-500' : 'text-gray-200'}`}>
-                          {t(item.type)}
-                        </h4>
-                        {item.isUploaded && (
-                          <div className="flex items-center gap-1 bg-gold-500/10 text-gold-500 text-[8px] px-1.5 py-0.5 rounded border border-gold-500/20 font-bold uppercase tracking-tighter">
-                            <Plane className="w-2 h-2" /> Verified
-                          </div>
-                        )}
-                      </div>
-                      <span className="text-[10px] text-gray-500 font-mono tracking-widest whitespace-nowrap shrink-0">{item.time}</span>
-                    </div>
-                    <p className="text-xs text-gray-400 break-words line-clamp-2">{t(item.detail) !== item.detail ? t(item.detail) : item.detail}</p>
+                <span className="text-[10px] text-gray-400 font-medium tracking-tighter group-hover:text-gold-500 transition-colors">{cat.name}</span>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        {/* Artisan Insights (Gangnam Unni style "Tips") */}
+        <section className="mb-8">
+          <div className="flex justify-between items-baseline mb-6">
+            <h3 className="text-lg font-serif text-white">{t('unni_tips_title')}</h3>
+            <button className="text-[10px] text-gray-500 uppercase tracking-widest font-bold flex items-center gap-1 hover:text-gold-500 transition-colors">
+              {t('view_all')} <ChevronRight size={12} />
+            </button>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-4">
+            {tips.map((tip) => (
+              <motion.div 
+                key={tip.id}
+                whileHover={{ y: -5 }}
+                className="flex flex-col gap-3 group cursor-pointer"
+              >
+                <div className="relative aspect-[3/4] rounded-2xl overflow-hidden border border-white/5">
+                  <img src={tip.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-70" alt={tip.title} />
+                  <div className="absolute inset-0 bg-gradient-to-t from-obsidian-950 via-transparent to-transparent" />
+                  <div className="absolute top-3 left-3 px-2 py-1 bg-gold-500/20 backdrop-blur-md rounded border border-gold-500/30 text-gold-500 text-[8px] font-bold uppercase">
+                    {tip.tag}
                   </div>
+                </div>
+                <h4 className="text-sm text-gray-200 font-medium leading-snug group-hover:text-gold-500 transition-colors line-clamp-2">
+                  {tip.title}
+                </h4>
+                <div className="flex items-center gap-1.5 text-[10px] text-gray-500 font-bold uppercase tracking-widest">
+                  <div className="w-4 h-4 rounded-full bg-gold-500 flex items-center justify-center text-[8px] text-obsidian-900">S</div>
+                  The Seoul Artisans
+                </div>
               </motion.div>
             ))}
-          </AnimatePresence>
-        </div>
-      </section>
-
-      {/* Curated Selections */}
-      <section>
-        <h3 className="font-serif tracking-wide text-lg mb-4">{t('curated')}</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <div onClick={() => setShowTryOn(true)} className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-transparent hover:border-gold-500/30 transition-colors">
-            <img src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?auto=format&fit=crop&q=80" alt="Assessment" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/40 to-transparent" />
-            <div className="absolute top-4 right-4 w-6 h-6 bg-gold-500/20 rounded-full flex items-center justify-center backdrop-blur-sm">
-              <Sparkles className="w-3 h-3 text-gold-500" />
-            </div>
-            <div className="absolute bottom-4 left-4 right-4">
-              <h4 className="font-serif text-sm">{t('assessment')}</h4>
-              <p className="text-[10px] text-gold-500 tracking-widest mt-1">{t('tryon_title')}</p>
-            </div>
           </div>
-          <div 
-            onClick={() => {
-              setActiveFilter('cat_plastic');
-              setActiveTab('artisans');
-            }} 
-            className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer border border-transparent hover:border-gold-500/30 transition-colors"
-          >
-            <img src={signatureLiftingHero} alt="Signature Lift" className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-60" />
-            <div className="absolute inset-0 bg-gradient-to-t from-obsidian-900 via-obsidian-900/40 to-transparent" />
-            <div className="absolute bottom-4 left-4 right-4">
-              <h4 className="font-serif text-sm">{t('signature_lift')}</h4>
-              <p className="text-[10px] text-gold-500 tracking-widest mt-1">{t('dr_choi_ex')}</p>
-            </div>
-          </div>
-        </div>
-      </section>
+        </section>
 
-      {/* AI Chatbot Bottom Sheet */}
+        {/* Brand Story Banner */}
+        <section className="mt-12 bg-obsidian-800/30 rounded-[2rem] p-8 border border-white/5 text-center">
+          <h3 className="font-serif text-gold-500 text-lg mb-2">Our Philosophy</h3>
+          <p className="text-[11px] text-gray-500 leading-relaxed max-w-xs mx-auto mb-6">
+            Connecting global VVIPs with Korea's most exclusive medical artisans. Excellence without compromise.
+          </p>
+          <div className="flex justify-center gap-6 text-gray-700">
+            <Star size={16} /> <Star size={16} /> <Star size={16} />
+          </div>
+        </section>
+      </div>
+
+      {/* Floating AI Genie (Trip.com Style) */}
+      <div className="fixed bottom-24 right-6 z-[60] flex flex-col items-end gap-4 pointer-events-none">
+        <AnimatePresence>
+          {!showChat && (
+            <motion.button 
+              initial={{ scale: 0, rotate: -45 }}
+              animate={{ scale: 1, rotate: 0 }}
+              exit={{ scale: 0, rotate: 45 }}
+              onClick={() => setShowChat(true)}
+              className="pointer-events-auto w-16 h-16 rounded-full bg-gradient-to-br from-gold-400 to-gold-600 shadow-[0_10px_30px_rgba(212,175,55,0.4)] flex flex-col items-center justify-center border-4 border-obsidian-900 ring-2 ring-gold-500 group"
+            >
+              <div className="relative">
+                <Headset className="w-7 h-7 text-obsidian-950 group-hover:scale-110 transition-transform" />
+                <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-obsidian-900 animate-pulse" />
+              </div>
+              <span className="text-[8px] font-black text-obsidian-950 mt-0.5 tracking-tighter uppercase">AI GENIE</span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* AI Chatbot Bottom Sheet (Integrated) */}
       <AnimatePresence>
         {showChat && (
           <motion.div 
-            initial={{ y: "100%" }}
-            animate={{ y: 0 }}
-            exit={{ y: "100%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+            initial={{ y: "100%", opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: "100%", opacity: 0 }}
             className="fixed inset-0 z-[100] bg-obsidian-900 flex flex-col max-w-md mx-auto"
           >
             <div className="flex items-center justify-between p-6 border-b border-gold-500/20 bg-obsidian-800/50 backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center">
-                  <Sparkles className="text-gold-500 w-5 h-5" />
+                <div className="w-12 h-12 rounded-full bg-gold-500/10 border border-gold-500/30 flex items-center justify-center overflow-hidden">
+                  <div className="text-xl">🧞‍♂️</div>
                 </div>
                 <div>
-                  <h2 className="font-serif text-gold-500">{t('ai_concierge')}</h2>
+                  <h2 className="font-serif text-gold-500 text-lg uppercase tracking-widest">AI GENIE</h2>
                   <div className="flex items-center gap-1.5 mt-0.5">
                     <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></span>
                     <span className="text-[10px] text-gray-400 tracking-widest">{t('chat_online')}</span>
@@ -253,32 +213,37 @@ export default function Home() {
                 </div>
               </div>
               <button onClick={() => setShowChat(false)} className="p-2 hover:bg-white/5 rounded-full transition-colors">
-                <X className="w-6 h-6 text-gray-400" />
+                <X className="w-8 h-8 text-gray-400" />
               </button>
             </div>
 
-            <div className="flex-1 overflow-y-auto p-6 space-y-6">
+            <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
+              {messages.length === 0 && (
+                <div className="text-center py-12 px-8">
+                  <div className="text-4xl mb-4">✨</div>
+                  <h3 className="text-gold-500 font-serif text-lg mb-2">How can I assist your journey?</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">Ask about medical procedures, luxury logistics, or artisan recommendations.</p>
+                </div>
+              )}
               {messages.map((msg, idx) => (
                 <motion.div 
                   key={idx}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, x: msg.sender === 'user' ? 20 : -20 }}
+                  animate={{ opacity: 1, x: 0 }}
                   className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
                 >
-                  <div className={`max-w-[80%] p-4 rounded-2xl ${
+                  <div className={`max-w-[85%] p-4 rounded-3xl ${
                     msg.sender === 'user' 
-                      ? 'bg-gold-500 text-obsidian-900 rounded-tr-sm' 
-                      : 'bg-obsidian-800 border border-white/5 text-gray-200 rounded-tl-sm'
+                      ? 'bg-gold-500 text-obsidian-900 rounded-tr-sm shadow-xl' 
+                      : 'bg-obsidian-800 border border-white/5 text-gray-200 rounded-tl-sm shadow-2xl'
                   }`}>
-                    <p className={`text-sm ${msg.sender === 'user' ? 'font-medium' : 'leading-relaxed'}`}>{msg.text}</p>
+                    <p className={`text-sm ${msg.sender === 'user' ? 'font-bold' : 'leading-relaxed'}`}>{msg.text}</p>
                   </div>
                 </motion.div>
               ))}
-              <div ref={chatEndRef} />
             </div>
 
-            {/* Voice AI Input Area */}
-            <div className="p-6 border-t border-white/10 bg-obsidian-900 pb-safe">
+            <div className="p-6 border-t border-white/10 bg-obsidian-950 pb-safe">
               <div className="flex items-center gap-3 relative">
                 <div className="relative flex-1">
                   <input 
@@ -288,45 +253,33 @@ export default function Home() {
                     onKeyDown={(e) => e.key === 'Enter' && handleSendMessage()}
                     placeholder={isListening ? t('voice_listening') : t('chat_type')}
                     disabled={isListening}
-                    className="w-full bg-obsidian-800 border border-white/10 rounded-full py-4 pl-6 pr-14 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-gold-500/50 transition-colors disabled:opacity-50"
+                    className="w-full bg-obsidian-800/50 border border-white/10 rounded-full py-4 pl-6 pr-14 text-sm text-white placeholder-gray-600 focus:outline-none focus:border-gold-500/50 shadow-inner"
                   />
-                  {!isListening && (
-                    <button 
-                      onClick={() => handleSendMessage()}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gold-500 rounded-full flex items-center justify-center hover:bg-gold-400 transition-colors"
-                    >
-                      <Send className="w-4 h-4 text-obsidian-900 ml-0.5" />
-                    </button>
-                  )}
+                  <button 
+                    onClick={() => handleSendMessage()}
+                    className="absolute right-2 top-1/2 -translate-y-1/2 w-10 h-10 bg-gold-500 rounded-full flex items-center justify-center shadow-lg active:scale-90 transition-all"
+                  >
+                    <Send className="w-4 h-4 text-obsidian-900" />
+                  </button>
                 </div>
-
-                {/* Microphone Button */}
                 <button 
-                  onClick={handleMicClick}
-                  className={`relative w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all ${
-                    isListening ? 'bg-gold-500 text-obsidian-900 shadow-[0_0_30px_rgba(212,175,55,0.6)]' : 'bg-obsidian-800 border border-white/10 text-gold-500 hover:border-gold-500/50'
+                  onClick={() => {
+                    setIsListening(true);
+                    setTimeout(() => {
+                      setIsListening(false);
+                      handleSendMessage("I'd like to book a private jet from Singapore.");
+                    }, 2500);
+                  }}
+                  className={`w-14 h-14 rounded-full flex items-center justify-center shrink-0 transition-all ${
+                    isListening ? 'bg-red-500 text-white shadow-[0_0_30px_rgba(239,68,68,0.5)]' : 'bg-obsidian-800 border border-white/10 text-gold-500'
                   }`}
                 >
                   <Mic className="w-6 h-6" />
-                  
-                  {isListening && (
-                    <motion.div
-                      animate={{ scale: [1, 1.5, 1], opacity: [0.5, 0, 0.5] }}
-                      transition={{ duration: 1.5, repeat: Infinity }}
-                      className="absolute inset-0 rounded-full border-2 border-gold-500"
-                    />
-                  )}
                 </button>
               </div>
-              <p className="text-[9px] text-gray-500 text-center mt-4 tracking-widest">{isListening ? t('voice_listening') : t('voice_tap')}</p>
             </div>
           </motion.div>
         )}
-      </AnimatePresence>
-
-      <AnimatePresence>
-        {showPassport && <MedicalPassport onClose={() => setShowPassport(false)} />}
-        {showTryOn && <VirtualTryOn onClose={() => setShowTryOn(false)} />}
       </AnimatePresence>
     </div>
   );

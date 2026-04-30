@@ -10,12 +10,7 @@ export function AppDataProvider({ children }) {
   const [activeMyPageView, setActiveMyPageView] = useState('profile');
   const [flightNoticeTrigger, setFlightNoticeTrigger] = useState(false);
 
-  // Global User Profile State
-  const [userProfile, setUserProfile] = useState({
-    name: 'Madame Kim',
-    avatar: defaultAvatar,
-    level: 'Lv.1'
-  });
+
 
   // Global Itinerary State
   const [schedule, setSchedule] = useState([
@@ -98,7 +93,6 @@ export function AppDataProvider({ children }) {
       activeFilter, setActiveFilter,
       activeMyPageView, setActiveMyPageView,
       flightNoticeTrigger, setFlightNoticeTrigger,
-      userProfile, setUserProfile,
       schedule, addScheduleItem, toggleFlightTicket, updateBookingStatus,
       posts, toggleEndorsement 
     }}>
