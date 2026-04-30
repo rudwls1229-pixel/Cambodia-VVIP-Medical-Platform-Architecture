@@ -215,6 +215,7 @@ export default function Concierge() {
 
             <div className="space-y-6">
               {confirmedBookings.length > 0 ? (
+                confirmedBookings.map((booking) => (
                   <motion.div 
                     key={booking.id}
                     initial={{ opacity: 0, y: 20 }}
