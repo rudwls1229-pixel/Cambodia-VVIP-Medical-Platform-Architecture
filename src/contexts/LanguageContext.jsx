@@ -147,7 +147,7 @@ const translations = {
     log_escort_none_title: "No Guide Required",
     log_escort_none_sub: "Individual schedule management",
     log_escort_full_title: "Professional VIP Escort",
-    log_escort_full_sub: "Full schedule assistance (KO/EN/KM)",
+    log_escort_full_sub: "Full schedule assistance (KO/EN/KH)",
     wiz_payment_notice: "Paid services require pre-payment for reservation. Refunds are not possible after 30 days from the schedule.",
     log_hotel_title: "Hotel Request (5-Star)",
     log_hotel_sub: "Luxury Partner Hotels",
@@ -189,6 +189,7 @@ const translations = {
     no_bookings: "No confirmed bookings yet.",
     voice_listening: "Listening...",
     voice_tap: "Tap to Speak",
+    wiz_date_hint: "Select start and end dates to define your stay period.",
 
     // Phase 4
     est_title: "Price Estimator",
@@ -410,6 +411,7 @@ const translations = {
     no_bookings: "확정된 예약 내역이 없습니다.",
     voice_listening: "듣고 있습니다...",
     voice_tap: "눌러서 말하기",
+    wiz_date_hint: "시작일과 종료일을 선택하여 예약 기간을 설정해주세요.",
 
     est_title: "예상 견적 계산기",
     est_sub: "투명한 비용 안내",
@@ -450,7 +452,7 @@ const translations = {
     log_self_sub: "개별 이동",
     log_self_detail: "병원을 직접 방문하시는 옵션입니다. 예약 확정 시 담당 의료 코디네이터의 연락처와 구글 맵 좌표를 보내드립니다."
   },
-  KM: {
+  KH: {
     home: "ទំព័រដើម",
     insights: "ការយល់ដឹង",
     circle: "រង្វង់ឯកជន",
@@ -587,7 +589,7 @@ const translations = {
     log_escort_none_title: "មិនត្រូវការមគ្គុទ្ទេសក៍",
     log_escort_none_sub: "ការគ្រប់គ្រងកាលវិភាគផ្ទាល់ខ្លួន",
     log_escort_full_title: "អ្នកអមដំណើរ VIP អាជីព",
-    log_escort_full_sub: "ជំនួយកាលវិភាគពេញលេញ (KO/EN/KM)",
+    log_escort_full_sub: "ជំនួយកាលវិភាគពេញលេញ (KO/EN/KH)",
     wiz_payment_notice: "សេវាកម្មបង់ប្រាក់តម្រូវឱ្យបង់ប្រាក់ជាមុនសម្រាប់ការកក់។ ការបង្វិលសងប្រាក់វិញមិនអាចធ្វើទៅបានទេបន្ទាប់ពី ៣០ ថ្ងៃចាប់ពីកាលវិភាគ។",
     log_hotel_title: "ស្នើសុំការកក់សណ្ឋាគារ (លំដាប់ផ្កាយ៥)",
     log_hotel_sub: "សណ្ឋាគារប្រណីតជាដៃគូ",
@@ -629,6 +631,7 @@ const translations = {
     no_bookings: "មិនទាន់មានការកក់ដែលបានបញ្ជាក់នៅឡើយទេ។",
     voice_listening: "កំពុងស្តាប់...",
     voice_tap: "ចុចដើម្បីនិយាយ",
+    wiz_date_hint: "ជ្រើសរើសថ្ងៃចាប់ផ្តើម និងថ្ងៃបញ្ចប់ ដើម្បីកំណត់រយៈពេលស្នាក់នៅរបស់អ្នក។",
 
     est_title: "ការប៉ាន់ស្មានតម្លៃ",
     est_sub: "តម្លៃតម្លាភាព",

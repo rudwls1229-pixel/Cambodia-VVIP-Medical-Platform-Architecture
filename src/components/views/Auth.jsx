@@ -123,7 +123,7 @@ export default function Auth() {
       {/* Language Switcher */}
       <div className="absolute top-6 right-6 z-50">
         <div className="flex bg-obsidian-950/80 backdrop-blur-xl border border-gold-500/10 rounded-full p-1 shadow-2xl">
-          {['EN', 'KO', 'KM'].map((l) => (
+          {['EN', 'KO', 'KH'].map((l) => (
             <button
               key={l}
               onClick={() => { setLang(l); setError(""); }}

@@ -1,13 +1,16 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Calendar, Car, Hotel, Languages, PenTool, ChevronLeft, ChevronRight, CheckCircle2, ShieldAlert, Globe } from 'lucide-react';
+import { X, Calendar, Car, Hotel, Languages, PenTool, ChevronLeft, ChevronRight, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 
 export default function BookingWizard({ onClose, onConfirm, artisanName }) {
   const { t, lang, setLang } = useLanguage();
   const [step, setStep] = useState(1);
   const [viewDate, setViewDate] = useState(new Date());
-  const [selectedDates, setSelectedDates] = useState([]);
+  
+  // Range selection states
+  const [rangeStart, setRangeStart] = useState(null);
+  const [rangeEnd, setRangeEnd] = useState(null);
   
   const [selectedEscort, setSelectedEscort] = useState('none');
   const [selectedLogistics, setSelectedLogistics] = useState('self');
@@ -26,13 +29,36 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
     { id: 6, icon: PenTool, title: t('wiz_step4') }
   ];
 
-  const toggleDate = (date) => {
-    const dateStr = date.toDateString();
-    setSelectedDates(prev => 
-      prev.includes(dateStr) 
-        ? prev.filter(d => d !== dateStr) 
-        : [...prev, dateStr]
-    );
+  const handleDateClick = (date) => {
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    
+    if (!rangeStart || (rangeStart && rangeEnd)) {
+      setRangeStart(d);
+      setRangeEnd(null);
+    } else if (rangeStart && !rangeEnd) {
+      if (d < rangeStart) {
+        setRangeStart(d);
+      } else {
+        setRangeEnd(d);
+      }
+    }
+  };
+
+  const isDateSelected = (date) => {
+    if (!rangeStart) return false;
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (rangeEnd) {
+      return d >= rangeStart && d <= rangeEnd;
+    }
+    return d.getTime() === rangeStart.getTime();
+  };
+
+  const isRangeEdge = (date) => {
+    if (!rangeStart) return null;
+    const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    if (d.getTime() === rangeStart.getTime()) return 'start';
+    if (rangeEnd && d.getTime() === rangeEnd.getTime()) return 'end';
+    return null;
   };
 
   const toggleDetail = (id) => {
@@ -74,7 +100,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
           </div>
           <div className="flex items-center gap-4">
             <div className="flex bg-obsidian-800 rounded-lg p-1 border border-white/5">
-              {['EN', 'KO', 'KM'].map(l => (
+              {['EN', 'KO', 'KH'].map(l => (
                 <button 
                   key={l}
                   onClick={() => setLang(l)}
@@ -114,7 +140,12 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
               <motion.div key="step1" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-6">
                 <div className="flex justify-between items-end">
                   <h3 className="text-lg font-serif">{t('wiz_step1')}</h3>
-                  <span className="text-[10px] text-gold-500 font-mono tracking-widest">{selectedDates.length} DAYS SELECTED</span>
+                  {rangeStart && (
+                    <span className="text-[10px] text-gold-500 font-mono tracking-widest">
+                      {rangeStart.toLocaleDateString(lang === 'KO' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' })} 
+                      {rangeEnd ? ` - ${rangeEnd.toLocaleDateString(lang === 'KO' ? 'ko-KR' : 'en-US', { month: 'short', day: 'numeric' })}` : ''}
+                    </span>
+                  )}
                 </div>
                 
                 <div className="bg-obsidian-800/50 border border-white/5 rounded-2xl p-4">
@@ -123,32 +154,43 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                     <span className="text-xs font-serif tracking-widest">{viewDate.toLocaleString(lang === 'KO' ? 'ko-KR' : 'default', { month: 'long', year: 'numeric' }).toUpperCase()}</span>
                     <button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1))} className="p-1 text-gold-500"><ChevronRight size={20}/></button>
                   </div>
-                  <div className="grid grid-cols-7 gap-1">
-                    {['S','M','T','W','T','F','S'].map(d => <div key={d} className="text-center text-[10px] text-gray-500 py-2">{d}</div>)}
+                  <div className="grid grid-cols-7 gap-y-1">
+                    {['S','M','T','W','T','F','S'].map(d => <div key={d} className="text-center text-[10px] text-gray-500 py-2 font-bold">{d}</div>)}
                     {Array.from({ length: new Date(viewDate.getFullYear(), viewDate.getMonth(), 1).getDay() }).map((_, i) => <div key={i} />)}
                     {Array.from({ length: new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 0).getDate() }).map((_, i) => {
                       const day = i + 1;
                       const dateObj = new Date(viewDate.getFullYear(), viewDate.getMonth(), day);
-                      const isSelected = selectedDates.includes(dateObj.toDateString());
+                      const selected = isDateSelected(dateObj);
+                      const edge = isRangeEdge(dateObj);
                       const isToday = new Date().toDateString() === dateObj.toDateString();
                       
                       return (
-                        <button 
-                          key={day} 
-                          onClick={() => toggleDate(dateObj)}
-                          className={`aspect-square rounded-lg text-xs transition-all relative flex items-center justify-center ${
-                            isSelected ? 'bg-gold-500 text-obsidian-900 font-bold' : 
-                            isToday ? 'border border-gold-500/30 text-gold-500' : 'text-gray-400 hover:bg-white/5'
-                          }`}
-                        >
-                          {day}
-                          {isSelected && <motion.div layoutId="date-glow" className="absolute inset-0 bg-gold-500 blur-sm -z-10 opacity-30" />}
-                        </button>
+                        <div key={day} className="relative aspect-square">
+                          <button 
+                            onClick={() => handleDateClick(dateObj)}
+                            className={`w-full h-full rounded-lg text-xs transition-all flex items-center justify-center relative z-10 ${
+                              edge ? 'bg-gold-500 text-obsidian-900 font-bold' : 
+                              selected ? 'bg-gold-500/20 text-gold-500 font-medium' :
+                              isToday ? 'border border-gold-500/30 text-gold-500' : 'text-gray-400 hover:bg-white/5'
+                            }`}
+                          >
+                            {day}
+                          </button>
+                          {selected && rangeStart && rangeEnd && (
+                            <div className={`absolute inset-y-1 bg-gold-500/20 z-0 ${
+                              edge === 'start' ? 'left-1/2 right-0' : 
+                              edge === 'end' ? 'left-0 right-1/2' : 
+                              'inset-x-0'
+                            }`} />
+                          )}
+                        </div>
                       );
                     })}
                   </div>
                 </div>
-                <p className="text-[10px] text-gray-500 italic text-center uppercase tracking-tighter">You can select multiple dates or a range by clicking each day.</p>
+                <p className="text-[10px] text-gray-400 italic text-center leading-relaxed">
+                  {t('wiz_date_hint')}
+                </p>
               </motion.div>
             )}
 
@@ -249,7 +291,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                 <div className="grid grid-cols-1 gap-4">
                   {[
                     { id: 'en_ko', flags: '🇰🇷 🇺🇸', label: 'English / Korean' },
-                    { id: 'km_ko', flags: '🇰🇷 🇰🇭', label: 'Khmer / Korean' }
+                    { id: 'kh_ko', flags: '🇰🇷 🇰🇭', label: 'Khmer / Korean' }
                   ].map(opt => (
                     <button 
                       key={opt.id}
@@ -277,7 +319,12 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                 <p className="text-sm text-gray-400 mb-8 px-8 leading-relaxed">Your medical journey is about to begin. Please review your preferences below.</p>
                 <div className="bg-obsidian-800 border border-white/10 rounded-2xl p-6 text-left space-y-3">
                   <div className="flex justify-between text-xs border-b border-white/5 pb-2"><span className="text-gray-500">Hospital</span><span className="text-white font-medium">{artisanName}</span></div>
-                  <div className="flex justify-between text-xs border-b border-white/5 pb-2"><span className="text-gray-500">Schedule</span><span className="text-gold-500 font-bold">{selectedDates.length > 0 ? `${selectedDates.length} Days Selected` : 'No dates selected'}</span></div>
+                  <div className="flex justify-between text-xs border-b border-white/5 pb-2">
+                    <span className="text-gray-500">Period</span>
+                    <span className="text-gold-500 font-bold">
+                      {rangeStart ? `${rangeStart.toLocaleDateString()} ${rangeEnd ? `- ${rangeEnd.toLocaleDateString()}` : ''}` : 'Not selected'}
+                    </span>
+                  </div>
                   <div className="flex justify-between text-xs border-b border-white/5 pb-2"><span className="text-gray-500">Logistics</span><span className="text-white font-medium uppercase">{selectedLogistics}</span></div>
                   <div className="flex justify-between text-xs"><span className="text-gray-500">Language</span><span className="text-white font-medium uppercase">{selectedLangPref.replace('_', ' / ')}</span></div>
                 </div>

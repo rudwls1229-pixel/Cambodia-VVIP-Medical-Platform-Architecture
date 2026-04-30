@@ -23,7 +23,7 @@ const ViewLoading = () => (
 
 function GlobalHeader() {
   const { lang, setLang } = useLanguage();
-  const langs = ['EN', 'KO', 'KM'];
+  const langs = ['EN', 'KO', 'KH'];
 
   return (
     <div className="absolute top-0 right-0 p-6 z-50">
