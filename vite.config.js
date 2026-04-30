@@ -9,7 +9,7 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
   ],
-  base: './',
+  base: '/Cambodia-VVIP-Medical-Platform-Architecture/', // EXACT base path requested
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -17,7 +17,7 @@ export default defineConfig({
     minify: 'terser',
     rollupOptions: {
       input: {
-        main: './index.template.html', // Use the renamed template
+        main: './index.html',
       },
       output: {
         manualChunks(id) {
