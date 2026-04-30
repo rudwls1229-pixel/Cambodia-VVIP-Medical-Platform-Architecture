@@ -261,8 +261,8 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                 <div className="w-16 h-16 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
                   <CheckCircle2 className="w-8 h-8 text-gold-500" />
                 </div>
-                <h3 className="text-2xl font-serif mb-2 uppercase tracking-tighter text-white">Review Request</h3>
-                <p className="text-[11px] text-gray-500 mb-8 px-10 leading-relaxed italic">Review your bespoke medical journey preferences.</p>
+                <h3 className="text-2xl font-serif mb-2 uppercase tracking-tighter text-white">{t('rev_title')}</h3>
+                <p className="text-[11px] text-gray-500 mb-8 px-10 leading-relaxed italic">{t('rev_sub')}</p>
                 <div className="bg-obsidian-800/60 border border-white/10 rounded-3xl p-6 text-left space-y-4 shadow-xl">
                   <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3"><span className="text-gray-500 font-medium">{t('rev_hospital')}</span><span className="text-white font-serif tracking-wide">{artisanName}</span></div>
                   <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3">
@@ -281,7 +281,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
 
         <div className="p-6 border-t border-white/5 pb-safe shrink-0">
           <button onClick={handleNext} className="w-full bg-gold-500 text-obsidian-900 py-4 rounded-2xl font-serif text-lg font-bold hover:bg-gold-400 transition-all shadow-[0_10px_30px_rgba(212,175,55,0.2)] active:scale-[0.98]">
-            {step < steps.length ? 'Continue' : t('wiz_confirm')}
+            {step < steps.length ? t('btn_continue') : t('wiz_confirm')}
           </button>
         </div>
       </motion.div>
