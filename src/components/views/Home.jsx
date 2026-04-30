@@ -84,12 +84,16 @@ export default function Home() {
             <LogOut className="w-4 h-4" />
           </button>
           <button 
-            onClick={() => setActiveTab('circle')}
+            onClick={() => setActiveTab('concierge')}
             className="w-10 h-10 rounded-full bg-obsidian-700 border border-gold-500/30 overflow-hidden relative group"
           >
-            <div className="w-full h-full bg-gold-500/20 flex items-center justify-center text-gold-500 font-bold text-xs">
-              {userProfile?.name?.[0] || 'V'}
-            </div>
+            {userProfile?.avatar ? (
+              <img src={userProfile.avatar} alt="Profile" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gold-500/20 flex items-center justify-center text-gold-500 font-bold text-xs uppercase">
+                {userProfile?.name?.[0] || 'V'}
+              </div>
+            )}
           </button>
         </div>
       </header>
