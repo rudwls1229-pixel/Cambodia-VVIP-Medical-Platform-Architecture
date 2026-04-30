@@ -70,7 +70,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-obsidian-900 pb-32">
       {/* Search Header (Gangnam Unni style) */}
-      <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 pt-16 pb-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
+      <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 py-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -89,7 +89,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="pt-36 px-6">
+      <div className="pt-24 px-6">
         {/* Main Banner Slider (Simulation) */}
         <div className="relative h-48 rounded-3xl overflow-hidden mb-8 group">
           <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950 to-transparent z-10" />
@@ -159,10 +159,13 @@ export default function Home() {
 
         {/* Brand Story Banner */}
         <section className="mt-12 bg-obsidian-800/30 rounded-[2rem] p-8 border border-white/5 text-center">
-          <h3 className="font-serif text-gold-500 text-lg mb-2">{t('philosophy_title')}</h3>
+          <h3 className="font-serif text-gold-500 text-lg mb-2">Our Philosophy</h3>
           <p className="text-[11px] text-gray-500 leading-relaxed max-w-xs mx-auto mb-6">
-            {t('philosophy_text')}
+            Connecting global VVIPs with Korea's most exclusive medical artisans. Excellence without compromise.
           </p>
+          <div className="flex justify-center gap-6 text-gray-700">
+            <Star size={16} /> <Star size={16} /> <Star size={16} />
+          </div>
         </section>
       </div>
 

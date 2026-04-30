@@ -26,7 +26,7 @@ function GlobalHeader() {
   const langs = ['EN', 'KO', 'KH'];
 
   return (
-    <div className="absolute top-0 right-0 p-4 z-[100]">
+    <div className="absolute top-0 right-0 p-6 z-50">
       <div className="relative flex bg-obsidian-900 border border-gold-500/30 rounded-full p-1 shadow-lg shadow-gold-500/5">
         {langs.map((l) => (
           <button
