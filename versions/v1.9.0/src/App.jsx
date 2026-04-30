@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react';
+import React, { useState, lazy, Suspense } from 'react';
 import Navigation from './components/Navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { LanguageProvider } from './contexts/LanguageContext';
@@ -6,15 +6,13 @@ import { AppDataProvider, useAppData } from './contexts/AppDataContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import LanguageSelector from './components/common/LanguageSelector';
 
-// Static imports for CORE views to prevent navigation white-screen issues
-import Auth from './components/views/Auth';
-import Home from './components/views/Home';
-import MedicalArtisans from './components/views/MedicalArtisans';
-import Concierge from './components/views/Concierge';
-
-// Lazy load non-critical views
+// Lazy load views for high performance
+const Auth = lazy(() => import('./components/views/Auth'));
+const Home = lazy(() => import('./components/views/Home'));
 const Insights = lazy(() => import('./components/views/Insights'));
 const PrivateCircle = lazy(() => import('./components/views/PrivateCircle'));
+const MedicalArtisans = lazy(() => import('./components/views/MedicalArtisans'));
+const Concierge = lazy(() => import('./components/views/Concierge'));
 const Diagnosis = lazy(() => import('./components/views/Diagnosis'));
 
 const ViewLoading = () => (
@@ -32,7 +30,9 @@ function MainLayout() {
       <div className="bg-obsidian-900 min-h-screen w-full flex justify-center">
         <div className="w-full max-w-md bg-obsidian-900 relative min-h-screen overflow-hidden">
           <LanguageSelector />
-          <Auth />
+          <Suspense fallback={<ViewLoading />}>
+            <Auth />
+          </Suspense>
         </div>
       </div>
     );
@@ -41,15 +41,11 @@ function MainLayout() {
   const renderContent = () => {
     switch (activeTab) {
       case 'home': return <Home />;
+      case 'insights': return <Insights />;
+      case 'circle': return <PrivateCircle />;
       case 'artisans': return <MedicalArtisans />;
       case 'concierge': return <Concierge />;
-      // Lazy views wrapped in Suspense individually or collectively
-      case 'insights': 
-        return <Suspense fallback={<ViewLoading />}><Insights /></Suspense>;
-      case 'circle': 
-        return <Suspense fallback={<ViewLoading />}><PrivateCircle /></Suspense>;
-      case 'diagnosis': 
-        return <Suspense fallback={<ViewLoading />}><Diagnosis /></Suspense>;
+      case 'diagnosis': return <Diagnosis />;
       default: return <Home />;
     }
   };
@@ -61,13 +57,15 @@ function MainLayout() {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeTab}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.15 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.2 }}
               className="h-full"
             >
-              {renderContent()}
+              <Suspense fallback={<ViewLoading />}>
+                {renderContent()}
+              </Suspense>
             </motion.div>
           </AnimatePresence>
         </main>
