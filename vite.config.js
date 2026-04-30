@@ -9,7 +9,7 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
   ],
-  base: './', // CRITICAL for GitHub Pages and relative asset loading
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
@@ -17,10 +17,12 @@ export default defineConfig({
     minify: 'terser',
     rollupOptions: {
       output: {
-        manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
-          'vendor-motion': ['framer-motion'],
-          'vendor-others': ['lucide-react', 'firebase/app', 'firebase/auth', 'firebase/firestore'],
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'vendor-react';
+            if (id.includes('framer-motion')) return 'vendor-motion';
+            return 'vendor-libs';
+          }
         }
       }
     }
