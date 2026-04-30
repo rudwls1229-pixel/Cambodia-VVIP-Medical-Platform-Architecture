@@ -16,9 +16,6 @@ export default defineConfig({
     sourcemap: false,
     minify: 'terser',
     rollupOptions: {
-      input: {
-        main: './index.template.html', // Use the renamed template
-      },
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
