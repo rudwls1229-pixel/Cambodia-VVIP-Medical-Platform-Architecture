@@ -1,5 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
-import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, Mail, HelpCircle, Info, Search, ArrowLeft, LogOut, UserMinus, ShieldCheck, Clock, CheckCircle } from 'lucide-react';
+import { 
+  Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, 
+  ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, 
+  Mail, HelpCircle, Info, Search, ArrowLeft, LogOut, UserMinus, 
+  ShieldCheck, Clock, CheckCircle 
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
@@ -31,7 +36,6 @@ export default function Concierge() {
 
   useEffect(() => {
     if (flightNoticeTrigger) {
-      // Find the latest booking that needs flight ticket
       const latest = confirmedBookings.find(b => !b.isUploaded);
       if (latest) {
         setSelectedBookingId(latest.id);
@@ -39,10 +43,10 @@ export default function Concierge() {
       }
       setFlightNoticeTrigger(false);
     }
-  }, [flightNoticeTrigger]);
+  }, [flightNoticeTrigger, confirmedBookings, setFlightNoticeTrigger]);
 
   const handleProfileClick = () => {
-    fileInputRef.current.click();
+    if (fileInputRef.current) fileInputRef.current.click();
   };
 
   const handleFileChange = (e) => {
@@ -150,10 +154,10 @@ export default function Concierge() {
               <div className="flex items-center gap-5 mb-8">
                 <div 
                   onClick={handleProfileClick}
-                  className="w-20 h-20 rounded-full border-2 border-gold-500/30 p-1 cursor-pointer relative group"
+                  className="w-20 h-20 rounded-full border-2 border-gold-500/30 p-1 cursor-pointer relative group overflow-hidden"
                 >
                   <img 
-                    src={userProfile.avatar} 
+                    src={userProfile?.avatar || defaultAvatar} 
                     className="w-full h-full rounded-full object-cover transition-opacity group-hover:opacity-60" 
                     alt="Avatar" 
                   />
@@ -162,8 +166,8 @@ export default function Concierge() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="text-xl font-serif text-white mb-1">{userProfile.name}</h2>
-                  <span className="text-[10px] font-bold bg-gold-500 text-obsidian-900 px-2 py-0.5 rounded tracking-widest uppercase">{userProfile.level}</span>
+                  <h2 className="text-xl font-serif text-white mb-1">{userProfile?.name}</h2>
+                  <span className="text-[10px] font-bold bg-gold-500 text-obsidian-900 px-2 py-0.5 rounded tracking-widest uppercase">{userProfile?.level}</span>
                 </div>
               </div>
 
@@ -189,11 +193,6 @@ export default function Concierge() {
               <MenuButton icon={Gift} label={t('my_benefits')} />
               <MenuButton icon={Bell} label={t('my_notif')} badge="1" />
               <MenuButton icon={Mail} label={t('my_msgs')} />
-            </div>
-
-            <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-4">
-              <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('cust_center')}</button>
-              <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('notice')}</button>
             </div>
           </motion.div>
         )}
@@ -303,43 +302,9 @@ export default function Concierge() {
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('service_info')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <SettingsRow label={t('version_info')} value="v 1.8.3 Optimized" hasArrow={false} />
+                  <SettingsRow label={t('version_info')} value="v 1.8.7 Optimized" hasArrow={false} />
                   <SettingsRow label={t('partnership')} />
                   <SettingsRow label={t('terms')} />
-                  <SettingsRow label={t('privacy')} />
-                  <SettingsRow label={t('location_terms')} />
-                </div>
-              </section>
-
-              <section>
-                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('notif_settings')}</h3>
-                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <SettingsRow label={t('gen_notif')} isSwitch={true} />
-                  <SettingsRow label={t('notes_notif')} isSwitch={true} />
-                </div>
-              </section>
-
-              <section>
-                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('marketing_info')}</h3>
-                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <SettingsRow label={t('push')} isSwitch={true} />
-                  <SettingsRow label="SMS" isSwitch={true} />
-                  <SettingsRow label="Email" isSwitch={true} />
-                  <SettingsRow label={t('night_push')} isSwitch={true} />
-                </div>
-              </section>
-
-              <section>
-                <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('acc_mgmt')}</h3>
-                <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <button className="w-full flex items-center justify-between py-4 text-sm text-gray-200 hover:text-white group">
-                    <span>{t('logout')}</span>
-                    <LogOut size={16} className="text-gray-600 group-hover:text-gold-500" />
-                  </button>
-                  <button className="w-full flex items-center justify-between py-4 text-sm text-gray-200 hover:text-white group border-t border-white/5">
-                    <span>{t('delete_acc')}</span>
-                    <UserMinus size={16} className="text-gray-600 group-hover:text-red-500" />
-                  </button>
                 </div>
               </section>
             </div>
@@ -347,6 +312,8 @@ export default function Concierge() {
         )}
       </AnimatePresence>
 
+      {/* Booking Details Modal */}
+      <AnimatePresence>
         {showDetails && selectedBooking && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[120] bg-black/95 backdrop-blur-2xl flex items-end sm:items-center justify-center">
             <motion.div 
@@ -398,17 +365,6 @@ export default function Concierge() {
                     </div>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="bg-obsidian-800/30 p-4 rounded-2xl border border-white/5">
-                    <p className="text-[10px] text-gray-500 uppercase mb-1 tracking-widest">Location</p>
-                    <p className="text-xs text-gray-300">Gangnam-gu, Seoul</p>
-                  </div>
-                  <div className="bg-obsidian-800/30 p-4 rounded-2xl border border-white/5">
-                    <p className="text-[10px] text-gray-500 uppercase mb-1 tracking-widest">Concierge</p>
-                    <p className="text-xs text-gray-300">Premium Butler Service</p>
-                  </div>
-                </div>
               </div>
 
               <button 
@@ -416,6 +372,34 @@ export default function Concierge() {
                 className="w-full mt-10 py-4 bg-gold-500 text-obsidian-900 rounded-2xl font-bold tracking-[0.2em] text-[11px] uppercase shadow-xl"
               >
                 Close Details
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Flight Upload Modal */}
+      <AnimatePresence>
+        {showUpload && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[130] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6">
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm bg-obsidian-800 border border-gold-500/30 rounded-3xl p-8 text-center shadow-2xl">
+              <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold-500/20">
+                <Plane size={40} className="text-gold-500" />
+              </div>
+              <h2 className="text-2xl font-serif text-gold-500 mb-2">{t('flight_upload_title')}</h2>
+              <p className="text-xs text-gray-400 mb-8 italic">{t('msg_upload_flight')}</p>
+              <div 
+                onClick={() => {
+                  if (selectedBookingId) toggleFlightTicket(selectedBookingId);
+                  setShowUpload(false);
+                }} 
+                className="border-2 border-dashed border-gold-500/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-all bg-gold-500/5"
+              >
+                <Upload className="w-8 h-8 text-gold-500/40 mx-auto" />
+                <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest font-bold">Tap to Upload</p>
+              </div>
+              <button onClick={() => setShowUpload(false)} className="w-full py-4 text-gray-500 hover:text-white transition-colors uppercase text-[10px] tracking-[0.3em] font-bold">
+                {t('pol_edit')}
               </button>
             </motion.div>
           </motion.div>
