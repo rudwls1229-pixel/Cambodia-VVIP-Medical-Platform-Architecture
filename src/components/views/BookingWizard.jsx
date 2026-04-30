@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Calendar, Car, Hotel, Languages, PenTool, ChevronLeft, ChevronRight, CheckCircle2, ShieldAlert } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
+import { useAppData } from '../../contexts/AppDataContext';
 
 export default function BookingWizard({ onClose, onConfirm, artisanName }) {
   const { t, lang, setLang } = useLanguage();
+  const { setActiveTab, setActiveMyPageView, setFlightNoticeTrigger } = useAppData();
   const [step, setStep] = useState(1);
   const [viewDate, setViewDate] = useState(new Date());
   
@@ -73,6 +75,10 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
   const handleFinalConfirm = () => {
     onConfirm();
     onClose();
+    // Redirect to My Page -> Bookings
+    setActiveTab('concierge');
+    setActiveMyPageView('bookings');
+    setFlightNoticeTrigger(true);
   };
 
   // Helper for translated values in Review Request
@@ -190,7 +196,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`escort_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`escort_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
                           {opt.price}
                         </span>
                         {selectedEscort === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
@@ -219,7 +225,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`log_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`log_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
                           {opt.price}
                         </span>
                         {selectedLogistics === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
@@ -248,7 +254,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`hotel_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`hotel_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
                           {opt.price}
                         </span>
                         {selectedHotel === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
@@ -278,7 +284,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                       <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest font-medium">{opt.sub}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                      <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
                         {opt.price}
                       </span>
                       {selectedInterpreter === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5" />}
@@ -323,7 +329,7 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
       <AnimatePresence>
         {showNotice && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/95 backdrop-blur-2xl flex items-center justify-center p-6">
-            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-w-sm bg-obsidian-900 border border-gold-500/30 rounded-[2.5rem] p-8 text-center shadow-[0_0_100px_rgba(0,0,0,1)] relative overflow-hidden">
+            <motion.div initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }} className="w-full max-sm bg-obsidian-900 border border-gold-500/30 rounded-[2.5rem] p-8 text-center shadow-[0_0_100px_rgba(0,0,0,1)] relative overflow-hidden">
               <div className="absolute top-0 left-0 w-full h-1.5 bg-gold-500 shadow-[0_0_20px_rgba(212,175,55,0.5)]" />
               <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner"><ShieldAlert className="w-10 h-10 text-gold-500" /></div>
               <h3 className="text-xl font-serif text-gold-500 mb-4 uppercase tracking-[0.2em]">{t('pol_title')}</h3>

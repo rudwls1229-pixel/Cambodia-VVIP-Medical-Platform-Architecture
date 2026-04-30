@@ -1,37 +1,37 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import legacy from '@vitejs/plugin-legacy'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import legacy from '@vitejs/plugin-legacy';
 
-// https://vite.dev/config/
+// https://vitejs.dev/config/
 export default defineConfig({
-  base: './',
   plugins: [
     react(),
-    tailwindcss(),
     legacy({
-      targets: ['ios >= 12', 'defaults', 'not IE 11'],
-      polyfills: true
+      targets: ['defaults', 'not IE 11'],
     }),
   ],
+  base: './',
   build: {
     target: 'es2015',
     minify: 'terser',
-    emptyOutDir: true,
+    cssCodeSplit: true,
     rollupOptions: {
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
-            if (id.includes('react') || id.includes('react-dom')) {
-              return 'vendor-react';
-            }
-            if (id.includes('framer-motion') || id.includes('lucide-react')) {
-              return 'vendor-ui';
-            }
+            if (id.includes('framer-motion')) return 'vendor-motion';
+            if (id.includes('lucide-react')) return 'vendor-ui';
+            if (id.includes('react')) return 'vendor-react';
             return 'vendor-others';
           }
-        }
+        },
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]'
       }
     }
+  },
+  server: {
+    historyApiFallback: true,
   }
-})
+});

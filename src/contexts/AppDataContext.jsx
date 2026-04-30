@@ -7,6 +7,8 @@ export function AppDataProvider({ children }) {
   // Global Navigation State
   const [activeTab, setActiveTab] = useState('home');
   const [activeFilter, setActiveFilter] = useState('cat_all');
+  const [activeMyPageView, setActiveMyPageView] = useState('profile');
+  const [flightNoticeTrigger, setFlightNoticeTrigger] = useState(false);
 
   // Global User Profile State
   const [userProfile, setUserProfile] = useState({
@@ -18,8 +20,8 @@ export function AppDataProvider({ children }) {
   // Global Itinerary State
   const [schedule, setSchedule] = useState([
     { id: 't1', type: 'time_arrive', status: 'completed', time: '10:00 AM', detail: 'ICN Terminal 2' },
-    { id: 't2', type: 'time_consult', status: 'current', time: '2:30 PM', detail: 'dr_lee_clinic', isUploaded: false },
-    { id: 't3', type: 'time_surgery', status: 'upcoming', time: '4:00 PM', detail: 'signature_lift', isUploaded: false },
+    { id: 't2', type: 'time_consult', status: 'current', time: '2:30 PM', detail: 'dr_lee_clinic', isUploaded: false, statusLabel: 'st_approved' },
+    { id: 't3', type: 'time_surgery', status: 'upcoming', time: '4:00 PM', detail: 'signature_lift', isUploaded: false, statusLabel: 'st_reviewing' },
     { id: 't4', type: 'time_recover', status: 'upcoming', time: 'Tomorrow', detail: 'VIP Suite A' }
   ]);
 
@@ -51,7 +53,6 @@ export function AppDataProvider({ children }) {
 
   // Actions
   const addScheduleItem = (artisanNameKey) => {
-    // For MVP timeline demo, we just add an extra step
     setSchedule(prev => [
       ...prev,
       {
@@ -59,9 +60,17 @@ export function AppDataProvider({ children }) {
         type: 'time_consult', 
         status: 'upcoming',
         time: 'TBD',
-        detail: artisanNameKey
+        detail: artisanNameKey,
+        isUploaded: false,
+        statusLabel: 'st_pending'
       }
     ]);
+  };
+
+  const updateBookingStatus = (itemId, newStatus) => {
+    setSchedule(prev => prev.map(item => 
+      item.id === itemId ? { ...item, statusLabel: newStatus } : item
+    ));
   };
 
   const toggleFlightTicket = (itemId) => {
@@ -87,8 +96,10 @@ export function AppDataProvider({ children }) {
     <AppDataContext.Provider value={{ 
       activeTab, setActiveTab,
       activeFilter, setActiveFilter,
+      activeMyPageView, setActiveMyPageView,
+      flightNoticeTrigger, setFlightNoticeTrigger,
       userProfile, setUserProfile,
-      schedule, addScheduleItem, toggleFlightTicket,
+      schedule, addScheduleItem, toggleFlightTicket, updateBookingStatus,
       posts, toggleEndorsement 
     }}>
       {children}

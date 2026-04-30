@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
-import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, Mail, HelpCircle, Info, Search, ArrowLeft, LogOut, UserMinus } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Plane, Calendar, CheckCircle2, Plus, X, Upload, FileText, Settings, ChevronRight, Wallet, Ticket, MessageCircle, Heart, Gift, Bell, Mail, HelpCircle, Info, Search, ArrowLeft, LogOut, UserMinus, ShieldCheck, Clock, CheckCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
@@ -9,8 +9,13 @@ import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Concierge() {
   const { t } = useLanguage();
-  const { schedule, userProfile, setUserProfile, toggleFlightTicket } = useAppData();
-  const [view, setView] = useState('profile'); // profile, bookings, settings
+  const { 
+    schedule, userProfile, setUserProfile, toggleFlightTicket, 
+    activeMyPageView, setActiveMyPageView, 
+    flightNoticeTrigger, setFlightNoticeTrigger,
+    updateBookingStatus
+  } = useAppData();
+  
   const [showUpload, setShowUpload] = useState(false);
   const [selectedBookingId, setSelectedBookingId] = useState(null);
   
@@ -19,6 +24,18 @@ export default function Concierge() {
   const confirmedBookings = schedule.filter(item => 
     item.type === 'time_surgery' || item.type === 'time_consult'
   );
+
+  useEffect(() => {
+    if (flightNoticeTrigger) {
+      // Find the latest booking that needs flight ticket
+      const latest = confirmedBookings.find(b => !b.isUploaded);
+      if (latest) {
+        setSelectedBookingId(latest.id);
+        setShowUpload(true);
+      }
+      setFlightNoticeTrigger(false);
+    }
+  }, [flightNoticeTrigger]);
 
   const handleProfileClick = () => {
     fileInputRef.current.click();
@@ -33,6 +50,32 @@ export default function Concierge() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const cycleStatus = (id, currentStatus) => {
+    const states = ['st_pending', 'st_reviewing', 'st_approved'];
+    const nextIdx = (states.indexOf(currentStatus) + 1) % states.length;
+    updateBookingStatus(id, states[nextIdx]);
+  };
+
+  const StatusBadge = ({ statusKey, onClick }) => {
+    const config = {
+      st_pending: { icon: Clock, color: 'text-amber-500', bg: 'bg-amber-500/10', border: 'border-amber-500/20' },
+      st_reviewing: { icon: ShieldCheck, color: 'text-blue-500', bg: 'bg-blue-500/10', border: 'border-blue-500/20' },
+      st_approved: { icon: CheckCircle, color: 'text-emerald-500', bg: 'bg-emerald-500/10', border: 'border-emerald-500/20' }
+    };
+    const cfg = config[statusKey] || config.st_pending;
+    const Icon = cfg.icon;
+
+    return (
+      <button 
+        onClick={onClick}
+        className={`flex items-center gap-1.5 px-2 py-1 rounded border ${cfg.bg} ${cfg.color} ${cfg.border} transition-all active:scale-95`}
+      >
+        <Icon size={10} />
+        <span className="text-[9px] font-bold uppercase tracking-wider">{t(statusKey)}</span>
+      </button>
+    );
   };
 
   const MenuButton = ({ icon: Icon, label, badge, onClick }) => (
@@ -84,7 +127,7 @@ export default function Concierge() {
       />
 
       <AnimatePresence mode="wait">
-        {view === 'profile' && (
+        {activeMyPageView === 'profile' && (
           <motion.div 
             key="profile"
             initial={{ opacity: 0 }}
@@ -94,7 +137,7 @@ export default function Concierge() {
           >
             <header className="flex justify-between items-center mb-8">
               <h1 className="text-2xl font-serif text-white">{t('my_page_title')}</h1>
-              <button onClick={() => setView('settings')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
+              <button onClick={() => setActiveMyPageView('settings')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
                 <Settings className="w-6 h-6 text-gray-400" />
               </button>
             </header>
@@ -137,7 +180,7 @@ export default function Concierge() {
             </div>
 
             <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-2 mb-8">
-              <MenuButton icon={Calendar} label={t('my_bookings_pay')} onClick={() => setView('bookings')} />
+              <MenuButton icon={Calendar} label={t('my_bookings_pay')} onClick={() => setActiveMyPageView('bookings')} />
               <MenuButton icon={Heart} label={t('my_liked')} />
               <MenuButton icon={Gift} label={t('my_benefits')} />
               <MenuButton icon={Bell} label={t('my_notif')} badge="1" />
@@ -147,12 +190,11 @@ export default function Concierge() {
             <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6 space-y-4">
               <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('cust_center')}</button>
               <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">{t('notice')}</button>
-              <button className="w-full text-left py-2 text-sm text-gray-400 hover:text-white transition-colors">시술 전후 사진</button>
             </div>
           </motion.div>
         )}
 
-        {view === 'bookings' && (
+        {activeMyPageView === 'bookings' && (
           <motion.div 
             key="bookings"
             initial={{ opacity: 0, x: 20 }}
@@ -161,7 +203,7 @@ export default function Concierge() {
             className="px-6"
           >
             <header className="flex items-center gap-4 mb-10">
-              <button onClick={() => setView('profile')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
+              <button onClick={() => setActiveMyPageView('profile')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
                 <ArrowLeft className="w-6 h-6 text-gray-400" />
               </button>
               <h1 className="text-2xl font-serif text-white">{t('my_bookings_pay')}</h1>
@@ -177,15 +219,18 @@ export default function Concierge() {
                     className="bg-obsidian-800/60 border border-white/5 rounded-2xl p-6 backdrop-blur-md relative overflow-hidden group"
                   >
                     <div className="absolute top-0 right-0 p-3">
-                      <div className="bg-gold-500/10 text-gold-500 text-[10px] px-2 py-1 rounded border border-gold-500/30 font-bold uppercase tracking-wider">VERIFIED</div>
+                      <StatusBadge 
+                        statusKey={booking.statusLabel || 'st_pending'} 
+                        onClick={() => cycleStatus(booking.id, booking.statusLabel || 'st_pending')}
+                      />
                     </div>
 
                     <div className="flex items-start gap-4 mb-6">
                       <div className="w-12 h-12 rounded-xl bg-gold-500/10 flex items-center justify-center border border-gold-500/20">
                         <Calendar className="w-6 h-6 text-gold-500" />
                       </div>
-                      <div>
-                        <h3 className="font-serif text-lg text-gray-100">{booking.detail}</h3>
+                      <div className="pr-12">
+                        <h3 className="font-serif text-lg text-gray-100">{t(booking.detail) || booking.detail}</h3>
                         <div className="flex items-center gap-2 mt-1">
                           <CheckCircle2 className="w-3.5 h-3.5 text-gold-500" />
                           <span className="text-xs text-gold-500/80">{t('confirmed_res')}</span>
@@ -196,8 +241,8 @@ export default function Concierge() {
                     <div className="bg-obsidian-900/50 rounded-xl p-5 border border-white/5">
                       <div className="flex justify-between items-center mb-4">
                         <div>
-                          <h4 className="text-sm font-medium text-gray-200">항공권 업로드</h4>
-                          <p className="text-[10px] text-gray-500 mt-0.5">공항 픽업 및 예약을 위해 필요합니다</p>
+                          <h4 className="text-sm font-medium text-gray-200">{t('flight_upload_title')}</h4>
+                          <p className="text-[10px] text-gray-500 mt-0.5">{t('flight_upload_sub')}</p>
                         </div>
                         {!booking.isUploaded ? (
                           <button 
@@ -229,7 +274,7 @@ export default function Concierge() {
           </motion.div>
         )}
 
-        {view === 'settings' && (
+        {activeMyPageView === 'settings' && (
           <motion.div 
             key="settings"
             initial={{ opacity: 0, y: 20 }}
@@ -238,18 +283,17 @@ export default function Concierge() {
             className="px-6"
           >
             <header className="flex items-center gap-4 mb-10">
-              <button onClick={() => setView('profile')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
+              <button onClick={() => setActiveMyPageView('profile')} className="p-2 rounded-full hover:bg-white/5 transition-colors">
                 <ArrowLeft className="w-6 h-6 text-gray-400" />
               </button>
-              <h1 className="text-2xl font-serif text-white">더 보기</h1>
+              <h1 className="text-2xl font-serif text-white">{t('settings_title')}</h1>
             </header>
 
             <div className="space-y-8">
-              {/* Service Info */}
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('service_info')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <SettingsRow label={t('version_info')} value="v 3.311.1 (749)" hasArrow={false} />
+                  <SettingsRow label={t('version_info')} value="v 1.8.3 Optimized" hasArrow={false} />
                   <SettingsRow label={t('partnership')} />
                   <SettingsRow label={t('terms')} />
                   <SettingsRow label={t('privacy')} />
@@ -257,7 +301,6 @@ export default function Concierge() {
                 </div>
               </section>
 
-              {/* Notification Settings */}
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('notif_settings')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
@@ -266,7 +309,6 @@ export default function Concierge() {
                 </div>
               </section>
 
-              {/* Marketing Settings */}
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('marketing_info')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
@@ -277,7 +319,6 @@ export default function Concierge() {
                 </div>
               </section>
 
-              {/* Account Management */}
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('acc_mgmt')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
@@ -296,13 +337,17 @@ export default function Concierge() {
         )}
       </AnimatePresence>
 
-      {/* Upload Modal */}
+      {/* Upload Modal / Flight Ticket Notice */}
       <AnimatePresence>
         {showUpload && (
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="fixed inset-0 z-[110] bg-black/90 backdrop-blur-xl flex items-center justify-center p-6">
-            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm bg-obsidian-800 border border-gold-500/30 rounded-3xl p-8 text-center">
-              <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold-500/20"><Upload size={40} className="text-gold-500" /></div>
-              <h2 className="text-2xl font-serif text-gold-500 mb-2">항공권 업로드</h2>
+            <motion.div initial={{ scale: 0.9, y: 20 }} animate={{ scale: 1, y: 0 }} className="w-full max-w-sm bg-obsidian-800 border border-gold-500/30 rounded-3xl p-8 text-center shadow-[0_0_50px_rgba(0,0,0,0.5)]">
+              <div className="w-20 h-20 bg-gold-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-gold-500/20 shadow-inner">
+                <Plane size={40} className="text-gold-500" />
+              </div>
+              <h2 className="text-2xl font-serif text-gold-500 mb-2">{t('flight_upload_title')}</h2>
+              <p className="text-xs text-gray-400 mb-8 italic">{t('msg_upload_flight')}</p>
+              
               <div 
                 onClick={() => {
                   if (selectedBookingId) {
@@ -310,12 +355,15 @@ export default function Concierge() {
                   }
                   setShowUpload(false);
                 }} 
-                className="border-2 border-dashed border-white/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-colors group"
+                className="border-2 border-dashed border-gold-500/10 rounded-2xl p-10 mb-8 cursor-pointer hover:border-gold-500/50 transition-all group bg-gold-500/5"
               >
-                <Plus className="w-8 h-8 text-gray-600 mx-auto group-hover:text-gold-500 transition-colors" />
-                <p className="text-xs text-gray-500 mt-2">Select Image or PDF</p>
+                <Upload className="w-8 h-8 text-gold-500/40 mx-auto group-hover:text-gold-500 transition-colors" />
+                <p className="text-[10px] text-gray-500 mt-2 uppercase tracking-widest font-bold">Tap to Upload</p>
               </div>
-              <button onClick={() => setShowUpload(false)} className="w-full py-4 text-gray-500 hover:text-white transition-colors uppercase text-xs tracking-widest">Cancel</button>
+              
+              <button onClick={() => setShowUpload(false)} className="w-full py-4 text-gray-500 hover:text-white transition-colors uppercase text-[10px] tracking-[0.3em] font-bold">
+                {t('pol_edit')}
+              </button>
             </motion.div>
           </motion.div>
         )}
