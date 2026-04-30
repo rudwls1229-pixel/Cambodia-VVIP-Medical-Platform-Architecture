@@ -9,9 +9,9 @@ export default function Navigation() {
   
   const tabs = [
     { id: 'home', icon: Home, label: t('home') },
-    { id: 'insights', icon: BookOpen, label: t('insights') },
-    { id: 'circle', icon: Users, label: t('circle') },
     { id: 'artisans', icon: Stethoscope, label: t('artisans') },
+    { id: 'circle', icon: Users, label: t('circle') },
+    { id: 'insights', icon: BookOpen, label: t('insights') },
     { id: 'concierge', icon: User, label: t('my_page_title') },
   ];
 
