@@ -14,11 +14,9 @@ import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
 import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Home() {
-  const { t, lang, setLang } = useLanguage();
+  const { t } = useLanguage();
   const { setActiveTab, setActiveFilter } = useAppData();
   const { userProfile } = useAuth();
-  
-  const langs = ['EN', 'KO', 'KH'];
   
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -71,33 +69,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-obsidian-900 pb-32">
-      {/* Search Header (Gangnam Unni style) with Integrated Language Selector */}
-      <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 pt-6 pb-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
-        {/* Language Selector Integrated */}
-        <div className="flex justify-end mb-4">
-          <div className="relative flex bg-obsidian-800/80 border border-white/10 rounded-full p-1 shadow-inner scale-90 origin-right">
-            {langs.map((l) => (
-              <button
-                key={l}
-                onClick={() => setLang(l)}
-                className={`relative z-10 w-10 py-1 text-[8px] font-bold tracking-widest transition-all duration-300 text-center ${
-                  lang === l ? 'text-obsidian-950' : 'text-gray-500'
-                }`}
-              >
-                {l}
-              </button>
-            ))}
-            <motion.div
-              className="absolute top-1 bottom-1 w-10 bg-gold-500 rounded-full"
-              initial={false}
-              animate={{
-                x: lang === 'EN' ? 0 : lang === 'KO' ? 40 : 80,
-              }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            />
-          </div>
-        </div>
-
+      {/* Search Header (Gangnam Unni style) */}
+      <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 pt-16 pb-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
@@ -116,7 +89,7 @@ export default function Home() {
         </div>
       </header>
 
-      <div className="pt-32 px-6">
+      <div className="pt-36 px-6">
         {/* Main Banner Slider (Simulation) */}
         <div className="relative h-48 rounded-3xl overflow-hidden mb-8 group">
           <div className="absolute inset-0 bg-gradient-to-r from-obsidian-950 to-transparent z-10" />

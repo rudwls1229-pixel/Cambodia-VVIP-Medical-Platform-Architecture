@@ -89,7 +89,7 @@ function MainLayout() {
       {/* Mobile Web View Constraint */}
       <div className="w-full max-w-md bg-obsidian-900 relative min-h-screen shadow-2xl shadow-black overflow-hidden flex flex-col">
         
-        {!user && <GlobalHeader />}
+        <GlobalHeader />
 
         {/* Main Content Area */}
         <main className="flex-1 overflow-y-auto pb-24 scrollbar-hide">
