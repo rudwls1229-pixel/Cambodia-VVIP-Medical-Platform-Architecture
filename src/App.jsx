@@ -55,6 +55,9 @@ function MainLayout() {
     return (
       <div className="bg-obsidian-900 min-h-screen w-full flex justify-center">
         <div className="w-full max-w-md bg-obsidian-900 relative min-h-screen overflow-hidden">
+          <div className="absolute top-0 left-0 bg-red-600 text-white text-[8px] px-2 py-0.5 z-[1000] font-black tracking-widest uppercase">
+            System v2.0.2 (RECOVERY MODE)
+          </div>
           <LanguageSelector />
           <Auth />
         </div>
@@ -77,6 +80,9 @@ function MainLayout() {
   return (
     <div className="bg-obsidian-900 min-h-screen text-gray-200 w-full flex justify-center">
       <div className="w-full max-w-md bg-obsidian-900 relative min-h-screen shadow-2xl shadow-black overflow-hidden flex flex-col">
+        <div className="absolute top-0 left-0 bg-gold-600 text-obsidian-950 text-[8px] px-2 py-0.5 z-[1000] font-black tracking-widest uppercase">
+          VVIP PLATFORM v2.0.2 (VERIFIED)
+        </div>
         <main className="flex-1 overflow-y-auto pb-24 scrollbar-hide">
           <AnimatePresence mode="wait">
             <motion.div key={activeTab} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.1 }} className="h-full">

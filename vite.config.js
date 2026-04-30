@@ -1,9 +1,11 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import legacy from '@vitejs/plugin-legacy';
+import tailwindcss from '@tailwindcss/vite'; // CRITICAL ADDITION
 
 export default defineConfig({
   plugins: [
+    tailwindcss(), // ENABLE TAILWIND 4
     react(),
     legacy({
       targets: ['defaults', 'not IE 11'],
@@ -12,10 +14,10 @@ export default defineConfig({
   base: '/Cambodia-VVIP-Medical-Platform-Architecture/', 
   build: {
     outDir: 'dist',
-    assetsDir: 'assets',
+    assetsDir: 'assets_v202', 
     sourcemap: false,
     minify: 'terser',
-    cssCodeSplit: false, // Integrated CSS as requested
+    cssCodeSplit: false,
     rollupOptions: {
       input: {
         main: './index.html',
