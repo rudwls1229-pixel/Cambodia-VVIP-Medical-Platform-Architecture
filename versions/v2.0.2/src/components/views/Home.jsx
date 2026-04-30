@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useAuth } from '../../contexts/AuthContext';
+import LanguageSelector from '../common/LanguageSelector';
 
 // Assets
 import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
@@ -71,8 +72,10 @@ export default function Home() {
     <div className="min-h-screen bg-obsidian-900 pb-32">
       {/* Search Header (Gangnam Unni style) with Integrated Language Selector */}
       <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 pt-6 pb-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
-        {/* Space for Global Language Selector */}
-        <div className="h-10" />
+        {/* Language Selector Integrated */}
+        <div className="flex justify-end mb-4">
+          <LanguageSelector variant="home" />
+        </div>
 
         <div className="flex items-center gap-4">
           <div className="flex-1 relative">

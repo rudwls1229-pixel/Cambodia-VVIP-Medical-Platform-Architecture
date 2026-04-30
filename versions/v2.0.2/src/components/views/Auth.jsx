@@ -120,7 +120,22 @@ export default function Auth() {
       
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-64 h-64 bg-gold-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Global Language Selector is now handled by App.jsx */}
+      {/* Language Switcher */}
+      <div className="absolute top-6 right-6 z-50">
+        <div className="flex bg-obsidian-950/80 backdrop-blur-xl border border-gold-500/10 rounded-full p-1 shadow-2xl">
+          {['EN', 'KO', 'KH'].map((l) => (
+            <button
+              key={l}
+              onClick={() => { setLang(l); setError(""); }}
+              className={`w-9 py-1 text-[8px] font-bold tracking-widest transition-all rounded-full ${
+                lang === l ? 'bg-gold-500 text-obsidian-950' : 'text-gray-500 hover:text-gray-300'
+              }`}
+            >
+              {l}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <AnimatePresence mode="wait">
         {stage === 'intro' && (
