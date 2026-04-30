@@ -9,12 +9,13 @@ export default defineConfig({
       targets: ['defaults', 'not IE 11'],
     }),
   ],
-  base: '/Cambodia-VVIP-Medical-Platform-Architecture/', // EXACT base path requested
+  base: '/Cambodia-VVIP-Medical-Platform-Architecture/', 
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
     sourcemap: false,
     minify: 'terser',
+    cssCodeSplit: false, // Integrated CSS as requested
     rollupOptions: {
       input: {
         main: './index.html',
