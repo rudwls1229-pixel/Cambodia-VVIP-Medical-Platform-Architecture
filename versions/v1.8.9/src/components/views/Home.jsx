@@ -8,16 +8,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useAuth } from '../../contexts/AuthContext';
-import LanguageSelector from '../common/LanguageSelector';
 
 // Assets
 import signatureLiftingHero from '../../assets/signature_lifting_hero.png';
 import defaultAvatar from '../../assets/default_profile.png';
 
 export default function Home() {
-  const { t } = useLanguage();
+  const { t, lang, setLang } = useLanguage();
   const { setActiveTab, setActiveFilter } = useAppData();
   const { userProfile } = useAuth();
+  
+  const langs = ['EN', 'KO', 'KH'];
   
   const [showChat, setShowChat] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -74,7 +75,27 @@ export default function Home() {
       <header className={`fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md z-40 px-6 pt-6 pb-4 transition-all duration-300 ${scrolled ? 'bg-obsidian-900/90 backdrop-blur-xl border-b border-white/5 shadow-2xl' : 'bg-transparent'}`}>
         {/* Language Selector Integrated */}
         <div className="flex justify-end mb-4">
-          <LanguageSelector variant="home" />
+          <div className="relative flex bg-obsidian-800/80 border border-white/10 rounded-full p-1 shadow-inner scale-90 origin-right">
+            {langs.map((l) => (
+              <button
+                key={l}
+                onClick={() => setLang(l)}
+                className={`relative z-10 w-10 py-1 text-[8px] font-bold tracking-widest transition-all duration-300 text-center ${
+                  lang === l ? 'text-obsidian-950' : 'text-gray-500'
+                }`}
+              >
+                {l}
+              </button>
+            ))}
+            <motion.div
+              className="absolute top-1 bottom-1 w-10 bg-gold-500 rounded-full"
+              initial={false}
+              animate={{
+                x: lang === 'EN' ? 0 : lang === 'KO' ? 40 : 80,
+              }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          </div>
         </div>
 
         <div className="flex items-center gap-4">
