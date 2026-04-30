@@ -75,6 +75,24 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
     onClose();
   };
 
+  // Helper for translated values in Review Request
+  const getTranslatedValue = (type, id) => {
+    if (type === 'escort') {
+      return id === 'none' ? t('log_escort_none_title') : t('log_escort_full_title');
+    }
+    if (type === 'logistics') {
+      return id === 'self' ? t('log_self_title') : t('log_vip_title');
+    }
+    if (type === 'hotel') {
+      return id === 'self' ? t('log_hotel_self_title') : t('log_hotel_title');
+    }
+    if (type === 'interpreter') {
+      const map = { none: 'int_none', kh_ko: 'int_kh_ko', en_ko: 'int_en_ko' };
+      return t(map[id]);
+    }
+    return id;
+  };
+
   return (
     <motion.div 
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -159,20 +177,24 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
               <motion.div key="step2" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h3 className="text-lg font-serif mb-6">{t('wiz_step_escort')}</h3>
                 {[
-                  { id: 'none', title: t('log_escort_none_title'), sub: t('log_escort_none_sub'), detail: t('log_self_detail') },
-                  { id: 'full', title: t('log_escort_full_title'), sub: t('log_escort_full_sub'), detail: t('log_vip_detail'), premium: true }
+                  { id: 'none', title: t('log_escort_none_title'), sub: t('log_escort_none_sub'), detail: t('log_self_detail'), price: 'FREE' },
+                  { id: 'full', title: t('log_escort_full_title'), sub: t('log_escort_full_sub'), detail: t('log_vip_detail'), premium: true, price: 'VIP' }
                 ].map(opt => (
                   <div key={opt.id} className={`p-5 rounded-2xl border transition-all cursor-pointer ${selectedEscort === opt.id ? 'bg-gold-500/10 border-gold-500 shadow-lg shadow-gold-500/5' : 'bg-obsidian-800/40 border-white/5 opacity-60 hover:opacity-100'}`}>
-                    <div className="flex justify-between items-start" onClick={() => setSelectedEscort(opt.id)}>
+                    <div className="flex justify-between items-center" onClick={() => setSelectedEscort(opt.id)}>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-serif text-gray-100">{opt.title}</h4>
-                          {opt.premium && <span className="text-[8px] bg-gold-500 text-obsidian-900 px-1.5 py-0.5 rounded font-bold tracking-tighter">VIP</span>}
                         </div>
                         <p className="text-[11px] text-gray-500 mt-1">{opt.sub}</p>
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`escort_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`escort_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
-                      {selectedEscort === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0 ml-4" />}
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                          {opt.price}
+                        </span>
+                        {selectedEscort === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
+                      </div>
                     </div>
                     <AnimatePresence>{expandedSections[`escort_${opt.id}`] && <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden"><div className="pt-4 mt-4 border-t border-white/5"><p className="text-[11px] text-gray-500 italic leading-relaxed">{opt.detail}</p></div></motion.div>}</AnimatePresence>
                   </div>
@@ -184,20 +206,24 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
               <motion.div key="step3" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h3 className="text-lg font-serif mb-6">{t('wiz_step2')}</h3>
                 {[
-                  { id: 'self', title: t('log_self_title'), sub: t('log_self_sub'), detail: t('log_self_detail') },
+                  { id: 'self', title: t('log_self_title'), sub: t('log_self_sub'), detail: t('log_self_detail'), price: 'FREE' },
                   { id: 'icn_vip', title: t('log_vip_title'), sub: t('log_vip_car'), detail: t('log_vip_detail'), price: '$680' }
                 ].map(opt => (
                   <div key={opt.id} className={`p-5 rounded-2xl border transition-all cursor-pointer ${selectedLogistics === opt.id ? 'bg-gold-500/10 border-gold-500 shadow-lg shadow-gold-500/5' : 'bg-obsidian-800/40 border-white/5 opacity-60 hover:opacity-100'}`}>
-                    <div className="flex justify-between items-start" onClick={() => setSelectedLogistics(opt.id)}>
+                    <div className="flex justify-between items-center" onClick={() => setSelectedLogistics(opt.id)}>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-serif text-gray-100">{opt.title}</h4>
-                          {opt.price && <span className="text-[9px] bg-gold-500/20 text-gold-500 px-1.5 py-0.5 rounded font-mono font-bold">{opt.price}</span>}
                         </div>
                         <p className="text-[11px] text-gray-500 mt-1">{opt.sub}</p>
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`log_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`log_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
-                      {selectedLogistics === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0 ml-4" />}
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                          {opt.price}
+                        </span>
+                        {selectedLogistics === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
+                      </div>
                     </div>
                     <AnimatePresence>{expandedSections[`log_${opt.id}`] && <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden"><div className="pt-4 mt-4 border-t border-white/5"><p className="text-[11px] text-gray-500 italic leading-relaxed">{opt.detail}</p></div></motion.div>}</AnimatePresence>
                   </div>
@@ -209,20 +235,24 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
               <motion.div key="step4" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h3 className="text-lg font-serif mb-6">{t('wiz_step_hotel')}</h3>
                 {[
-                  { id: 'self', title: t('log_hotel_self_title'), sub: t('log_hotel_self_sub'), detail: t('log_hotel_self_detail') },
-                  { id: 'request', title: t('log_hotel_title'), sub: t('log_hotel_sub'), detail: t('log_hotel_detail'), premium: true }
+                  { id: 'self', title: t('log_hotel_self_title'), sub: t('log_hotel_self_sub'), detail: t('log_hotel_self_detail'), price: 'FREE' },
+                  { id: 'request', title: t('log_hotel_title'), sub: t('log_hotel_sub'), detail: t('log_hotel_detail'), premium: true, price: 'HOTEL' }
                 ].map(opt => (
                   <div key={opt.id} className={`p-5 rounded-2xl border transition-all cursor-pointer ${selectedHotel === opt.id ? 'bg-gold-500/10 border-gold-500 shadow-lg shadow-gold-500/5' : 'bg-obsidian-800/40 border-white/5 opacity-60 hover:opacity-100'}`}>
-                    <div className="flex justify-between items-start" onClick={() => setSelectedHotel(opt.id)}>
+                    <div className="flex justify-between items-center" onClick={() => setSelectedHotel(opt.id)}>
                       <div className="flex-1">
                         <div className="flex items-center gap-2">
                           <h4 className="font-serif text-gray-100">{opt.title}</h4>
-                          {opt.premium && <span className="text-[8px] bg-gold-500 text-obsidian-900 px-1.5 py-0.5 rounded font-bold tracking-tighter">HOTEL</span>}
                         </div>
                         <p className="text-[11px] text-gray-500 mt-1">{opt.sub}</p>
                         <button onClick={(e) => { e.stopPropagation(); toggleDetail(`hotel_${opt.id}`); }} className="text-[9px] text-gold-500/60 mt-2 font-bold tracking-[0.2em] uppercase hover:text-gold-500">{expandedSections[`hotel_${opt.id}`] ? '(CLOSE)' : '(DETAILS)'}</button>
                       </div>
-                      {selectedHotel === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0 ml-4" />}
+                      <div className="flex items-center gap-3">
+                        <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'self' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                          {opt.price}
+                        </span>
+                        {selectedHotel === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 shrink-0" />}
+                      </div>
                     </div>
                     <AnimatePresence>{expandedSections[`hotel_${opt.id}`] && <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden"><div className="pt-4 mt-4 border-t border-white/5"><p className="text-[11px] text-gray-500 italic leading-relaxed">{opt.detail}</p></div></motion.div>}</AnimatePresence>
                   </div>
@@ -234,9 +264,9 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
               <motion.div key="step5" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="space-y-4">
                 <h3 className="text-lg font-serif mb-6">{t('wiz_step3')}</h3>
                 {[
-                  { id: 'none', flags: '🏳️', title: t('int_none'), sub: t('int_none_sub'), free: true },
-                  { id: 'kh_ko', flags: '🇰🇷 🇰🇭', title: t('int_kh_ko'), sub: t('int_kh_ko_sub') },
-                  { id: 'en_ko', flags: '🇰🇷 🇺🇸', title: t('int_en_ko'), sub: t('int_en_ko_sub') }
+                  { id: 'none', flags: '🏳️', title: t('int_none'), sub: t('int_none_sub'), price: 'FREE' },
+                  { id: 'kh_ko', flags: '🇰🇷 🇰🇭', title: t('int_kh_ko'), sub: t('int_kh_ko_sub'), price: 'PAID' },
+                  { id: 'en_ko', flags: '🇰🇷 🇺🇸', title: t('int_en_ko'), sub: t('int_en_ko_sub'), price: 'PAID' }
                 ].map(opt => (
                   <button 
                     key={opt.id} onClick={() => setSelectedInterpreter(opt.id)}
@@ -244,13 +274,15 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                   >
                     <span className="text-2xl shrink-0 grayscale-[0.3]">{opt.flags}</span>
                     <div className="text-left flex-1">
-                      <div className="flex items-center gap-2">
-                        <h4 className={`text-sm font-medium ${selectedInterpreter === opt.id ? 'text-gold-500' : 'text-gray-300'}`}>{opt.title}</h4>
-                        {opt.free && <span className="text-[8px] border border-green-500/50 text-green-500 px-1 rounded uppercase tracking-tighter font-bold">FREE</span>}
-                      </div>
+                      <h4 className={`text-sm font-medium ${selectedInterpreter === opt.id ? 'text-gold-500' : 'text-gray-300'}`}>{opt.title}</h4>
                       <p className="text-[10px] text-gray-500 mt-1 uppercase tracking-widest font-medium">{opt.sub}</p>
                     </div>
-                    {selectedInterpreter === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5 ml-auto" />}
+                    <div className="flex items-center gap-3">
+                      <span className={`text-[9px] font-bold px-2 py-1 rounded-md ${opt.id === 'none' ? 'bg-white/5 text-gray-500' : 'bg-gold-500 text-obsidian-900 shadow-lg'}`}>
+                        {opt.price}
+                      </span>
+                      {selectedInterpreter === opt.id && <CheckCircle2 className="text-gold-500 w-5 h-5" />}
+                    </div>
                   </button>
                 ))}
               </motion.div>
@@ -271,8 +303,9 @@ export default function BookingWizard({ onClose, onConfirm, artisanName }) {
                       {rangeStart ? `${rangeStart.toLocaleDateString()} ${rangeEnd ? `- ${rangeEnd.toLocaleDateString()}` : ''}` : t('pol_not_selected')}
                     </span>
                   </div>
-                  <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3"><span className="text-gray-500 font-medium">{t('rev_logistics')}</span><span className="text-white font-medium uppercase tracking-widest">{selectedLogistics}</span></div>
-                  <div className="flex justify-between items-center text-xs"><span className="text-gray-500 font-medium">{t('rev_interpreter')}</span><span className="text-white font-medium uppercase tracking-widest">{selectedInterpreter.replace('_', ' / ')}</span></div>
+                  <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3"><span className="text-gray-500 font-medium">{t('rev_logistics')}</span><span className="text-white font-medium uppercase tracking-widest">{getTranslatedValue('logistics', selectedLogistics)}</span></div>
+                  <div className="flex justify-between items-center text-xs border-b border-white/5 pb-3"><span className="text-gray-500 font-medium">{t('wiz_step_escort')}</span><span className="text-white font-medium uppercase tracking-widest">{getTranslatedValue('escort', selectedEscort)}</span></div>
+                  <div className="flex justify-between items-center text-xs"><span className="text-gray-500 font-medium">{t('rev_interpreter')}</span><span className="text-white font-medium uppercase tracking-widest">{getTranslatedValue('interpreter', selectedInterpreter)}</span></div>
                 </div>
               </motion.div>
             )}
