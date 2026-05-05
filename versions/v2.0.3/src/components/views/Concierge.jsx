@@ -9,8 +9,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { useAppData } from '../../contexts/AppDataContext';
 import { useAuth } from '../../contexts/AuthContext';
-import { useTheme } from '../../contexts/ThemeContext';
-import { Sun, Moon } from 'lucide-react';
 
 // Default avatar
 import defaultAvatar from '../../assets/default_profile.png';
@@ -23,12 +21,7 @@ export default function Concierge() {
     flightNoticeTrigger, setFlightNoticeTrigger,
     updateBookingStatus
   } = useAppData();
-  const { userProfile, setUserProfile, user } = useAuth();
-  const { theme, toggleTheme } = useTheme();
-  
-  // 관리자 여부 확인 (Firebase UID 등으로 판별 가능)
-  const isAdmin = user?.email === 'admin@the-seoul.com'; 
-
+  const { userProfile, setUserProfile } = useAuth();
   
   const [showUpload, setShowUpload] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
@@ -309,27 +302,11 @@ export default function Concierge() {
               <section>
                 <h3 className="text-sm font-bold text-gray-100 mb-4 px-2">{t('service_info')}</h3>
                 <div className="bg-obsidian-800/30 border border-white/5 rounded-3xl p-6">
-                  <div onClick={toggleTheme} className="flex items-center justify-between py-4 border-b border-white/5 cursor-pointer group">
-                    <span className="text-sm text-gray-200 group-hover:text-gold-500 transition-all">
-                      {theme === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                    </span>
-                    <div className="w-10 h-10 rounded-xl bg-gold-500/10 flex items-center justify-center text-gold-500">
-                      {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-                    </div>
-                  </div>
-                  <SettingsRow label={t('version_info')} value="v 3.0.0 Modular" hasArrow={false} />
+                  <SettingsRow label={t('version_info')} value="v 1.8.7 Optimized" hasArrow={false} />
                   <SettingsRow label={t('partnership')} />
                   <SettingsRow label={t('terms')} />
                 </div>
               </section>
-              
-              {isAdmin && (
-                <section className="bg-gold-500/5 border border-gold-500/20 rounded-3xl p-6">
-                  <h3 className="text-[10px] font-black text-gold-500 uppercase tracking-widest mb-4">Admin Protocol</h3>
-                  <p className="text-[9px] text-gray-500 mb-4 italic">관리자 전용: 리뷰 및 이벤트를 고정할 수 있습니다.</p>
-                  <button className="w-full py-3 bg-gold-500 text-obsidian-900 rounded-xl text-[10px] font-bold uppercase">Manage Global Content</button>
-                </section>
-              )}
             </div>
           </motion.div>
         )}

@@ -14,7 +14,7 @@ export default defineConfig({
   base: '/Cambodia-VVIP-Medical-Platform-Architecture/', 
   build: {
     outDir: 'dist',
-    assetsDir: 'assets_v300', 
+    assetsDir: 'assets_v202', 
     sourcemap: false,
     minify: 'terser',
     cssCodeSplit: false,
